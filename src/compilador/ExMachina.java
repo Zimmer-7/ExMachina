@@ -12,7 +12,7 @@ public class ExMachina implements ExMachinaConstants {
       System.out.print("Enter an expression like \"1+(2+3)*4;\" :");
       try
       {
-        switch (ExMachina.one_line())
+        switch (ExMachina.inicio())
         {
           case 0 :
           System.out.println("OK.");
@@ -39,27 +39,52 @@ public class ExMachina implements ExMachinaConstants {
     }
   }
 
-  static final public int one_line() throws ParseException {
+  static final public int inicio() throws ParseException {
     switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
-	    case MINUS:
-	    case CONSTANT:
-	    case 12:{
-	      sum();
-	      jj_consume_token(11);
-	{if ("" != null) return 0;}
-	      break;
-	      }
-	    case 11:{
-	      jj_consume_token(11);
-	{if ("" != null) return 1;}
-	      break;
-	      }
-	    default:
-	      jj_la1[0] = jj_gen;
-	      jj_consume_token(-1);
-	      throw new ParseException();
+    case TIPOINT:
+    case TIPOFLOAT:
+    case TIPOSTRING:{
+      declaracao();
+{if ("" != null) return 0;}
+      break;
+      }
+    case 0:{
+      jj_consume_token(0);
+{if ("" != null) return 1;}
+      break;
+      }
+    default:
+      jj_la1[0] = jj_gen;
+      jj_consume_token(-1);
+      throw new ParseException();
     }
     throw new Error("Missing return statement in function");
+}
+
+  static final public void tipo() throws ParseException {
+    switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
+    case TIPOINT:{
+      jj_consume_token(TIPOINT);
+      break;
+      }
+    case TIPOFLOAT:{
+      jj_consume_token(TIPOFLOAT);
+      break;
+      }
+    case TIPOSTRING:{
+      jj_consume_token(TIPOSTRING);
+      break;
+      }
+    default:
+      jj_la1[1] = jj_gen;
+      jj_consume_token(-1);
+      throw new ParseException();
+    }
+}
+
+  static final public void declaracao() throws ParseException {
+    tipo();
+    jj_consume_token(ID);
 }
 
   static final public void sum() throws ParseException {
@@ -73,7 +98,7 @@ public class ExMachina implements ExMachinaConstants {
         break;
         }
       default:
-        jj_la1[1] = jj_gen;
+        jj_la1[2] = jj_gen;
         break label_1;
       }
       switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
@@ -86,7 +111,7 @@ public class ExMachina implements ExMachinaConstants {
         break;
         }
       default:
-        jj_la1[2] = jj_gen;
+        jj_la1[3] = jj_gen;
         jj_consume_token(-1);
         throw new ParseException();
       }
@@ -105,7 +130,7 @@ public class ExMachina implements ExMachinaConstants {
         break;
         }
       default:
-        jj_la1[3] = jj_gen;
+        jj_la1[4] = jj_gen;
         break label_2;
       }
       switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
@@ -118,7 +143,7 @@ public class ExMachina implements ExMachinaConstants {
         break;
         }
       default:
-        jj_la1[4] = jj_gen;
+        jj_la1[5] = jj_gen;
         jj_consume_token(-1);
         throw new ParseException();
       }
@@ -134,12 +159,12 @@ public class ExMachina implements ExMachinaConstants {
       break;
       }
     case CONSTANT:
-    case 12:{
+    case 16:{
       element();
       break;
       }
     default:
-      jj_la1[5] = jj_gen;
+      jj_la1[6] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
@@ -151,14 +176,14 @@ public class ExMachina implements ExMachinaConstants {
       jj_consume_token(CONSTANT);
       break;
       }
-    case 12:{
-      jj_consume_token(12);
+    case 16:{
+      jj_consume_token(16);
       sum();
-      jj_consume_token(13);
+      jj_consume_token(17);
       break;
       }
     default:
-      jj_la1[6] = jj_gen;
+      jj_la1[7] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
@@ -174,13 +199,13 @@ public class ExMachina implements ExMachinaConstants {
   static public Token jj_nt;
   static private int jj_ntk;
   static private int jj_gen;
-  static final private int[] jj_la1 = new int[7];
+  static final private int[] jj_la1 = new int[8];
   static private int[] jj_la1_0;
   static {
 	   jj_la1_init_0();
 	}
 	private static void jj_la1_init_0() {
-	   jj_la1_0 = new int[] {0x1a40,0x60,0x60,0x180,0x180,0x1240,0x1200,};
+	   jj_la1_0 = new int[] {0xe01,0xe00,0x60,0x60,0x180,0x180,0x11040,0x11000,};
 	}
 
   /** Constructor with InputStream. */
@@ -201,7 +226,7 @@ public class ExMachina implements ExMachinaConstants {
 	 token = new Token();
 	 jj_ntk = -1;
 	 jj_gen = 0;
-	 for (int i = 0; i < 7; i++) jj_la1[i] = -1;
+	 for (int i = 0; i < 8; i++) jj_la1[i] = -1;
   }
 
   /** Reinitialise. */
@@ -215,7 +240,7 @@ public class ExMachina implements ExMachinaConstants {
 	 token = new Token();
 	 jj_ntk = -1;
 	 jj_gen = 0;
-	 for (int i = 0; i < 7; i++) jj_la1[i] = -1;
+	 for (int i = 0; i < 8; i++) jj_la1[i] = -1;
   }
 
   /** Constructor. */
@@ -232,7 +257,7 @@ public class ExMachina implements ExMachinaConstants {
 	 token = new Token();
 	 jj_ntk = -1;
 	 jj_gen = 0;
-	 for (int i = 0; i < 7; i++) jj_la1[i] = -1;
+	 for (int i = 0; i < 8; i++) jj_la1[i] = -1;
   }
 
   /** Reinitialise. */
@@ -250,7 +275,7 @@ public class ExMachina implements ExMachinaConstants {
 	 token = new Token();
 	 jj_ntk = -1;
 	 jj_gen = 0;
-	 for (int i = 0; i < 7; i++) jj_la1[i] = -1;
+	 for (int i = 0; i < 8; i++) jj_la1[i] = -1;
   }
 
   /** Constructor with generated Token Manager. */
@@ -266,7 +291,7 @@ public class ExMachina implements ExMachinaConstants {
 	 token = new Token();
 	 jj_ntk = -1;
 	 jj_gen = 0;
-	 for (int i = 0; i < 7; i++) jj_la1[i] = -1;
+	 for (int i = 0; i < 8; i++) jj_la1[i] = -1;
   }
 
   /** Reinitialise. */
@@ -275,7 +300,7 @@ public class ExMachina implements ExMachinaConstants {
 	 token = new Token();
 	 jj_ntk = -1;
 	 jj_gen = 0;
-	 for (int i = 0; i < 7; i++) jj_la1[i] = -1;
+	 for (int i = 0; i < 8; i++) jj_la1[i] = -1;
   }
 
   static private Token jj_consume_token(int kind) throws ParseException {
@@ -326,12 +351,12 @@ public class ExMachina implements ExMachinaConstants {
   /** Generate ParseException. */
   static public ParseException generateParseException() {
 	 jj_expentries.clear();
-	 boolean[] la1tokens = new boolean[14];
+	 boolean[] la1tokens = new boolean[18];
 	 if (jj_kind >= 0) {
 	   la1tokens[jj_kind] = true;
 	   jj_kind = -1;
 	 }
-	 for (int i = 0; i < 7; i++) {
+	 for (int i = 0; i < 8; i++) {
 	   if (jj_la1[i] == jj_gen) {
 		 for (int j = 0; j < 32; j++) {
 		   if ((jj_la1_0[i] & (1<<j)) != 0) {
@@ -340,7 +365,7 @@ public class ExMachina implements ExMachinaConstants {
 		 }
 	   }
 	 }
-	 for (int i = 0; i < 14; i++) {
+	 for (int i = 0; i < 18; i++) {
 	   if (la1tokens[i]) {
 		 jj_expentry = new int[1];
 		 jj_expentry[0] = i;

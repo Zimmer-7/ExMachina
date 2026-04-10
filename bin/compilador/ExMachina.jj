@@ -20,7 +20,7 @@ public class ExMachina
       System.out.print("Enter an expression like \"1+(2+3)*4;\" :");
       try
       {
-        switch (ExMachina.one_line())
+        switch (ExMachina.inicio())
         {
           case 0 : 
           System.out.println("OK.");
@@ -68,22 +68,49 @@ TOKEN : /* OPERATORS */
 
 TOKEN :
 {
-  < CONSTANT : (< DIGIT >)+ >
-| < #DIGIT : [ "0"-"9" ] >
+  
+  < TIPOINT : "totum">
+| < TIPOFLOAT : "fracta">
+| < TIPOSTRING : "verbum">
+
 }
 
-int one_line() :
+TOKEN :
+{
+  < CONSTANT : (< DIGIT >)+ >
+| < DIGIT : [ "0"-"9" ] >
+| < ID: (<CARACTERE >)+>
+| < CARACTERE : ["a" - "z"]>
+}
+
+int inicio() :
+{ }
+{	 declaracao()
+	
+	{
+	  return 0;
+	}
+
+| < EOF> { return 1; }
+}
+
+
+
+void tipo() :
 {}
 {
-  sum() ";"
-  {
-    return 0;
-  }
-| ";"
-  {
-    return 1;
-  }
+  <TIPOINT > | < TIPOFLOAT> | < TIPOSTRING> 
 }
+
+
+void declaracao() :
+{ }
+{
+  tipo() <ID >
+}
+
+
+
 
 void sum() :
 {}

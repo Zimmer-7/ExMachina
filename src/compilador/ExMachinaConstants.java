@@ -19,9 +19,19 @@ public interface ExMachinaConstants {
   /** RegularExpression Id. */
   int DIVIDE = 8;
   /** RegularExpression Id. */
-  int CONSTANT = 9;
+  int TIPOINT = 9;
   /** RegularExpression Id. */
-  int DIGIT = 10;
+  int TIPOFLOAT = 10;
+  /** RegularExpression Id. */
+  int TIPOSTRING = 11;
+  /** RegularExpression Id. */
+  int CONSTANT = 12;
+  /** RegularExpression Id. */
+  int DIGIT = 13;
+  /** RegularExpression Id. */
+  int ID = 14;
+  /** RegularExpression Id. */
+  int CARACTERE = 15;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -37,9 +47,13 @@ public interface ExMachinaConstants {
     "\"-\"",
     "\"*\"",
     "\"/\"",
+    "\"totum\"",
+    "\"fracta\"",
+    "\"verbum\"",
     "<CONSTANT>",
     "<DIGIT>",
-    "\";\"",
+    "<ID>",
+    "<CARACTERE>",
     "\"(\"",
     "\")\"",
   };
