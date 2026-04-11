@@ -71,11 +71,21 @@ TOKEN :
   < MAIN : "MagnumOpus">
 | < ABREBLOCO : "Aperta">
 | < FECHABLOCO : "Clauderes">
+| < ABREPARENT : "Claude" >
+| < FECHAPARENT : "Aperi" >
 | < FIM : "~">
 | < TIPOINT : "totum">
 | < TIPOFLOAT : "fracta">
 | < TIPOSTRING : "verbum">
 | < ATRIBUICAO : "=">
+| < SEPARADOR  : "," >
+| < IF : "criterus" >
+| < ELSE : "paribus" >
+| < IGUAL : "==" >
+| < MAIOR : ">" >
+| < MENOR : "<" >
+| < MAIORIGUAL : ">=" >
+| < MENORIGUAL : "<=" >
 
 }
 
@@ -102,13 +112,13 @@ int inicio() :
 void bloco() :
 { }
 {
-  < ABREBLOCO>(declaracao())* < FECHABLOCO>
+  < ABREBLOCO>(declaracao() | condicional())* < FECHABLOCO>
 }
 
 void declaracao() :
 { }
 {
-  tipo() <ID > atribuicao() <FIM>
+  tipo() var()  ( < SEPARADOR > var())* <FIM>
 }
 
 void atribuicao() :
@@ -121,6 +131,12 @@ void tipo() :
 {}
 {
   <TIPOINT > | < TIPOFLOAT> | < TIPOSTRING> 
+}
+void var() :
+{}
+{
+ < ID > (atribuicao())?
+
 }
 
 
@@ -148,3 +164,20 @@ void elemento() :
   < CONSTANTE >
 | "(" expressao() ")"
 }
+void operadores() :
+{}
+{
+  <IGUAL > | < MAIOR > | < MENOR > | < MAIORIGUAL > | < MENORIGUAL >
+}
+void condicional() :
+{}
+{
+  < IF > <ABREPARENT > condicao() < FECHAPARENT > bloco() <ELSE > ( < ELSE > bloco())?
+}  
+void condicao() :
+{}
+{
+  <ID >  operadores() (< ID > | < CONSTANTE >)
+
+}
+  
