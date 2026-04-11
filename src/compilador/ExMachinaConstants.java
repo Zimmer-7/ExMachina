@@ -11,27 +11,39 @@ public interface ExMachinaConstants {
   /** End of File. */
   int EOF = 0;
   /** RegularExpression Id. */
-  int PLUS = 5;
+  int MAIS = 5;
   /** RegularExpression Id. */
-  int MINUS = 6;
+  int MENOS = 6;
   /** RegularExpression Id. */
-  int MULTIPLY = 7;
+  int MULTIPLICA = 7;
   /** RegularExpression Id. */
   int DIVIDE = 8;
   /** RegularExpression Id. */
-  int TIPOINT = 9;
+  int MAIN = 9;
   /** RegularExpression Id. */
-  int TIPOFLOAT = 10;
+  int ABREBLOCO = 10;
   /** RegularExpression Id. */
-  int TIPOSTRING = 11;
+  int FECHABLOCO = 11;
   /** RegularExpression Id. */
-  int CONSTANT = 12;
+  int FIM = 12;
   /** RegularExpression Id. */
-  int DIGIT = 13;
+  int TIPOINT = 13;
   /** RegularExpression Id. */
-  int ID = 14;
+  int TIPOFLOAT = 14;
   /** RegularExpression Id. */
-  int CARACTERE = 15;
+  int TIPOSTRING = 15;
+  /** RegularExpression Id. */
+  int ATRIBUICAO = 16;
+  /** RegularExpression Id. */
+  int CONSTANTE = 17;
+  /** RegularExpression Id. */
+  int DIGITO = 18;
+  /** RegularExpression Id. */
+  int ID = 19;
+  /** RegularExpression Id. */
+  int CARACTERE = 20;
+  /** RegularExpression Id. */
+  int CADEIA = 21;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -47,13 +59,19 @@ public interface ExMachinaConstants {
     "\"-\"",
     "\"*\"",
     "\"/\"",
+    "\"MagnumOpus\"",
+    "\"Aperta\"",
+    "\"Clauderes\"",
+    "\"~\"",
     "\"totum\"",
     "\"fracta\"",
     "\"verbum\"",
-    "<CONSTANT>",
-    "<DIGIT>",
+    "\"=\"",
+    "<CONSTANTE>",
+    "<DIGITO>",
     "<ID>",
     "<CARACTERE>",
+    "<CADEIA>",
     "\"(\"",
     "\")\"",
   };

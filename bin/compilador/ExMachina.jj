@@ -16,8 +16,8 @@ public class ExMachina
     ExMachina parser = new ExMachina(System.in);
     while (true)
     {
-      System.out.println("Reading from standard input...");
-      System.out.print("Enter an expression like \"1+(2+3)*4;\" :");
+      System.out.println("Lendo o input padrao");
+      System.out.print("Insira uma declaracao de variavel:\n");
       try
       {
         switch (ExMachina.inicio())
@@ -60,32 +60,37 @@ SKIP :
 
 TOKEN : /* OPERATORS */
 {
-  < PLUS : "+" >
-| < MINUS : "-" >
-| < MULTIPLY : "*" >
+  < MAIS : "+" >
+| < MENOS : "-" >
+| < MULTIPLICA : "*" >
 | < DIVIDE : "/" >
 }
 
 TOKEN :
 {
-  
-  < TIPOINT : "totum">
+  < MAIN : "MagnumOpus">
+| < ABREBLOCO : "Aperta">
+| < FECHABLOCO : "Clauderes">
+| < FIM : "~">
+| < TIPOINT : "totum">
 | < TIPOFLOAT : "fracta">
 | < TIPOSTRING : "verbum">
+| < ATRIBUICAO : "=">
 
 }
 
 TOKEN :
 {
-  < CONSTANT : (< DIGIT >)+ >
-| < DIGIT : [ "0"-"9" ] >
+  < CONSTANTE : (< DIGITO >)+ >
+| < DIGITO : [ "0"-"9" ] >
 | < ID: (<CARACTERE >)+>
-| < CARACTERE : ["a" - "z"]>
+| < CARACTERE : ["a" - "z"] | ["A" - "Z"]>
+| < CADEIA : "\"" (<CARACTERE> | <DIGITO> | " ")* "\"" >
 }
 
 int inicio() :
 { }
-{	 declaracao()
+{	 < MAIN> bloco()
 	
 	{
 	  return 0;
@@ -94,7 +99,23 @@ int inicio() :
 | < EOF> { return 1; }
 }
 
+void bloco() :
+{ }
+{
+  < ABREBLOCO>(declaracao())* < FECHABLOCO>
+}
 
+void declaracao() :
+{ }
+{
+  tipo() <ID > atribuicao() <FIM>
+}
+
+void atribuicao() :
+{}
+{
+  < ATRIBUICAO> (expressao() | <CADEIA>)
+}
 
 void tipo() :
 {}
@@ -103,51 +124,27 @@ void tipo() :
 }
 
 
-void declaracao() :
-{ }
-{
-  tipo() <ID >
-}
-
-
-
-
-void sum() :
+void expressao() :
 {}
 {
-  term()
-  (
-    (
-      < PLUS >
-    | < MINUS >
-    )
-    term()
-  )*
+  termo()((< MAIS > | < MENOS >) termo() )*
 }
 
-void term() :
+void termo() :
 {}
 {
-  unary()
-  (
-    (
-      < MULTIPLY >
-    | < DIVIDE >
-    )
-    unary()
-  )*
+  unario()((< MULTIPLICA > | < DIVIDE >)unario())*
 }
 
-void unary() :
+void unario() :
 {}
 {
-  < MINUS > element()
-| element()
+  < MENOS > elemento() | elemento()
 }
 
-void element() :
+void elemento() :
 {}
 {
-  < CONSTANT >
-| "(" sum() ")"
+  < CONSTANTE >
+| "(" expressao() ")"
 }
