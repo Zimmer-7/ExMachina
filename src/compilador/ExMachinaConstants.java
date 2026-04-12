@@ -25,25 +25,47 @@ public interface ExMachinaConstants {
   /** RegularExpression Id. */
   int FECHABLOCO = 11;
   /** RegularExpression Id. */
-  int FIM = 12;
+  int ABREPARENT = 12;
   /** RegularExpression Id. */
-  int TIPOINT = 13;
+  int FECHAPARENT = 13;
   /** RegularExpression Id. */
-  int TIPOFLOAT = 14;
+  int FIM = 14;
   /** RegularExpression Id. */
-  int TIPOSTRING = 15;
+  int TIPOINT = 15;
   /** RegularExpression Id. */
-  int ATRIBUICAO = 16;
+  int TIPOFLOAT = 16;
   /** RegularExpression Id. */
-  int CONSTANTE = 17;
+  int TIPOSTRING = 17;
   /** RegularExpression Id. */
-  int DIGITO = 18;
+  int ATRIBUICAO = 18;
   /** RegularExpression Id. */
-  int ID = 19;
+  int SEPARADOR = 19;
   /** RegularExpression Id. */
-  int CARACTERE = 20;
+  int IF = 20;
   /** RegularExpression Id. */
-  int CADEIA = 21;
+  int ELSE = 21;
+  /** RegularExpression Id. */
+  int IGUAL = 22;
+  /** RegularExpression Id. */
+  int MAIOR = 23;
+  /** RegularExpression Id. */
+  int MENOR = 24;
+  /** RegularExpression Id. */
+  int MAIORIGUAL = 25;
+  /** RegularExpression Id. */
+  int MENORIGUAL = 26;
+  /** RegularExpression Id. */
+  int CONSTANTE = 27;
+  /** RegularExpression Id. */
+  int DIGITO = 28;
+  /** RegularExpression Id. */
+  int REAL = 29;
+  /** RegularExpression Id. */
+  int ID = 30;
+  /** RegularExpression Id. */
+  int CARACTERE = 31;
+  /** RegularExpression Id. */
+  int CADEIA = 32;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -62,18 +84,27 @@ public interface ExMachinaConstants {
     "\"MagnumOpus\"",
     "\"Aperta\"",
     "\"Clauderes\"",
+    "\"Claude\"",
+    "\"Aperi\"",
     "\"~\"",
     "\"totum\"",
     "\"fracta\"",
     "\"verbum\"",
     "\"=\"",
+    "\",\"",
+    "\"ceteris\"",
+    "\"paribus\"",
+    "\"==\"",
+    "\">\"",
+    "\"<\"",
+    "\">=\"",
+    "\"<=\"",
     "<CONSTANTE>",
     "<DIGITO>",
+    "<REAL>",
     "<ID>",
     "<CARACTERE>",
     "<CADEIA>",
-    "\"(\"",
-    "\")\"",
   };
 
 }

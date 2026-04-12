@@ -79,7 +79,7 @@ TOKEN :
 | < TIPOSTRING : "verbum">
 | < ATRIBUICAO : "=">
 | < SEPARADOR  : "," >
-| < IF : "criterus" >
+| < IF : "ceteris" >
 | < ELSE : "paribus" >
 | < IGUAL : "==" >
 | < MAIOR : ">" >
@@ -93,6 +93,7 @@ TOKEN :
 {
   < CONSTANTE : (< DIGITO >)+ >
 | < DIGITO : [ "0"-"9" ] >
+| < REAL : < CONSTANTE >"."< CONSTANTE > >
 | < ID: (<CARACTERE >)+>
 | < CARACTERE : ["a" - "z"] | ["A" - "Z"]>
 | < CADEIA : "\"" (<CARACTERE> | <DIGITO> | " ")* "\"" >
@@ -112,72 +113,95 @@ int inicio() :
 void bloco() :
 { }
 {
-  < ABREBLOCO>(declaracao() | condicional())* < FECHABLOCO>
+	< ABREBLOCO >(declaracao() <FIM> | declaracaoMultipla() <FIM> | condicional())* < FECHABLOCO>
 }
 
 void declaracao() :
 { }
 {
-  tipo() var()  ( < SEPARADOR > var())* <FIM>
+	(< TIPOINT > var() atribuicaoInt() |
+	 < TIPOFLOAT > var() atribuicaoFloat() |
+	 < TIPOSTRING > var() atribuicaoString())
 }
 
-void atribuicao() :
+void declaracaoMultipla() :
+{ }
+{
+	declaracao() ( < SEPARADOR > declaracao())*
+}
+
+void atribuicaoString() :
 {}
 {
-  < ATRIBUICAO> (expressao() | <CADEIA>)
+	< ATRIBUICAO> <CADEIA>
+}
+
+void atribuicaoInt() :
+{}
+{
+	< ATRIBUICAO> (<CONSTANTE> | expressao())
+}
+
+void atribuicaoFloat() :
+{}
+{
+	< ATRIBUICAO> (< REAL > | expressao())
 }
 
 void tipo() :
 {}
 {
-  <TIPOINT > | < TIPOFLOAT> | < TIPOSTRING> 
+	< TIPOINT > | < TIPOFLOAT> | < TIPOSTRING> 
 }
+
 void var() :
 {}
 {
- < ID > (atribuicao())?
+	< ID >
 
 }
-
 
 void expressao() :
 {}
 {
-  termo()((< MAIS > | < MENOS >) termo() )*
+	termo()((< MAIS > | < MENOS >) termo() )*
 }
 
 void termo() :
 {}
 {
-  unario()((< MULTIPLICA > | < DIVIDE >)unario())*
+	unario()((< MULTIPLICA > | < DIVIDE >)unario())*
 }
 
 void unario() :
 {}
 {
-  < MENOS > elemento() | elemento()
+	< MENOS > elemento() | elemento()
 }
 
 void elemento() :
 {}
 {
-  < CONSTANTE >
-| "(" expressao() ")"
+	< CONSTANTE >
+| 	<ABREPARENT > expressao() < FECHAPARENT >
 }
+
 void operadores() :
 {}
 {
-  <IGUAL > | < MAIOR > | < MENOR > | < MAIORIGUAL > | < MENORIGUAL >
+	<IGUAL > | < MAIOR > | < MENOR > | < MAIORIGUAL > | < MENORIGUAL >
 }
+
 void condicional() :
 {}
 {
-  < IF > <ABREPARENT > condicao() < FECHAPARENT > bloco() <ELSE > ( < ELSE > bloco())?
-}  
+	< IF > <ABREPARENT > condicao() < FECHAPARENT > bloco() <ELSE > ( < ELSE > bloco())?
+}
+
 void condicao() :
 {}
 {
-  <ID >  operadores() (< ID > | < CONSTANTE >)
+	<ID >  operadores() (< ID > | < CONSTANTE >)
 
 }
   
