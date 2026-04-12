@@ -71,21 +71,25 @@ TOKEN :
   < MAIN : "MagnumOpus">
 | < ABREBLOCO : "Aperta">
 | < FECHABLOCO : "Clauderes">
-| < ABREPARENT : "Claude" >
-| < FECHAPARENT : "Aperi" >
+| < ABREPARENT : "Aperi" >
+| < FECHAPARENT : "Claude" >
 | < FIM : "~">
 | < TIPOINT : "totum">
 | < TIPOFLOAT : "fracta">
 | < TIPOSTRING : "verbum">
-| < ATRIBUICAO : "=">
+| < ATRIBUICAO : "memento">
 | < SEPARADOR  : "," >
 | < IF : "ceteris" >
 | < ELSE : "paribus" >
-| < IGUAL : "==" >
+| < IGUAL : "idem" >
 | < MAIOR : ">" >
 | < MENOR : "<" >
 | < MAIORIGUAL : ">=" >
 | < MENORIGUAL : "<=" >
+| < LOOPFOR : "iterabilis" >
+| < LOOPWHILE : "dum" >
+| < ABREVETOR : "Catena">
+| < FECHAVETOR : "Connexa">
 
 }
 
@@ -101,7 +105,7 @@ TOKEN :
 
 int inicio() :
 { }
-{	 < MAIN> bloco()
+{	 < MAIN > bloco()
 	
 	{
 	  return 0;
@@ -113,15 +117,33 @@ int inicio() :
 void bloco() :
 { }
 {
-	< ABREBLOCO >(declaracao() <FIM> | declaracaoMultipla() <FIM> | condicional())* < FECHABLOCO>
+	< ABREBLOCO > (declaracao() <FIM> | condicional())* < FECHABLOCO>
 }
 
 void declaracao() :
 { }
 {
-	(< TIPOINT > var() atribuicaoInt() |
-	 < TIPOFLOAT > var() atribuicaoFloat() |
-	 < TIPOSTRING > var() atribuicaoString())
+	(< TIPOINT >(vetorTamanho())? var() (atribuicaoInt())? |
+	 < TIPOFLOAT >(vetorTamanho())? var() (atribuicaoFloat())? |
+	 < TIPOSTRING >(vetorTamanho())? var() (atribuicaoString())?) 
+}
+
+void vetorTamanho() :
+{}
+{
+  < ABREVETOR > (< CONSTANTE >)? < FECHAVETOR >
+}
+
+void vetorCheio() :
+{}
+{
+  < ABREVETOR > valor() (< SEPARADOR > valor())* < FECHAVETOR >
+}
+
+void valor() :
+{}
+{
+  < CONSTANTE > | < CADEIA > | < REAL >
 }
 
 void declaracaoMultipla() :
@@ -133,19 +155,19 @@ void declaracaoMultipla() :
 void atribuicaoString() :
 {}
 {
-	< ATRIBUICAO> <CADEIA>
+	< ATRIBUICAO> (<CADEIA> | vetorCheio())
 }
 
 void atribuicaoInt() :
 {}
 {
-	< ATRIBUICAO> (<CONSTANTE> | expressao())
+	< ATRIBUICAO> (<CONSTANTE> | expressao() | vetorCheio())
 }
 
 void atribuicaoFloat() :
 {}
 {
-	< ATRIBUICAO> (< REAL > | expressao())
+	< ATRIBUICAO> (< REAL > | expressao() | vetorCheio())
 }
 
 void tipo() :
@@ -195,13 +217,13 @@ void operadores() :
 void condicional() :
 {}
 {
-	< IF > <ABREPARENT > condicao() < FECHAPARENT > bloco() <ELSE > ( < ELSE > bloco())?
+	< IF > <ABREPARENT > condicao() < FECHAPARENT > bloco() ( < ELSE > bloco())?
 }
 
 void condicao() :
 {}
 {
-	<ID >  operadores() (< ID > | < CONSTANTE >)
+	< ID >  operadores() (< ID > | < CONSTANTE >)
 
 }
   

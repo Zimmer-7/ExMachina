@@ -55,17 +55,25 @@ public interface ExMachinaConstants {
   /** RegularExpression Id. */
   int MENORIGUAL = 26;
   /** RegularExpression Id. */
-  int CONSTANTE = 27;
+  int LOOPFOR = 27;
   /** RegularExpression Id. */
-  int DIGITO = 28;
+  int LOOPWHILE = 28;
   /** RegularExpression Id. */
-  int REAL = 29;
+  int ABREVETOR = 29;
   /** RegularExpression Id. */
-  int ID = 30;
+  int FECHAVETOR = 30;
   /** RegularExpression Id. */
-  int CARACTERE = 31;
+  int CONSTANTE = 31;
   /** RegularExpression Id. */
-  int CADEIA = 32;
+  int DIGITO = 32;
+  /** RegularExpression Id. */
+  int REAL = 33;
+  /** RegularExpression Id. */
+  int ID = 34;
+  /** RegularExpression Id. */
+  int CARACTERE = 35;
+  /** RegularExpression Id. */
+  int CADEIA = 36;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -84,21 +92,25 @@ public interface ExMachinaConstants {
     "\"MagnumOpus\"",
     "\"Aperta\"",
     "\"Clauderes\"",
-    "\"Claude\"",
     "\"Aperi\"",
+    "\"Claude\"",
     "\"~\"",
     "\"totum\"",
     "\"fracta\"",
     "\"verbum\"",
-    "\"=\"",
+    "\"memento\"",
     "\",\"",
     "\"ceteris\"",
     "\"paribus\"",
-    "\"==\"",
+    "\"idem\"",
     "\">\"",
     "\"<\"",
     "\">=\"",
     "\"<=\"",
+    "\"iterabilis\"",
+    "\"dum\"",
+    "\"Catena\"",
+    "\"Connexa\"",
     "<CONSTANTE>",
     "<DIGITO>",
     "<REAL>",
