@@ -117,15 +117,15 @@ int inicio() :
 void bloco() :
 { }
 {
-	< ABREBLOCO > (declaracao() <FIM> | condicional())* < FECHABLOCO>
+	< ABREBLOCO > (declaracao() <FIM> | condicional() | enquanto() | para())* < FECHABLOCO>
 }
 
 void declaracao() :
 { }
 {
-	(< TIPOINT >(vetorTamanho())? var() (atribuicaoInt())? |
-	 < TIPOFLOAT >(vetorTamanho())? var() (atribuicaoFloat())? |
-	 < TIPOSTRING >(vetorTamanho())? var() (atribuicaoString())?) 
+	(< TIPOINT >(vetorTamanho())? < ID > (atribuicaoInt())? |
+	 < TIPOFLOAT >(vetorTamanho())? < ID > (atribuicaoFloat())? |
+	 < TIPOSTRING >(vetorTamanho())? < ID > (atribuicaoString())?) 
 }
 
 void vetorTamanho() :
@@ -161,7 +161,7 @@ void atribuicaoString() :
 void atribuicaoInt() :
 {}
 {
-	< ATRIBUICAO> (<CONSTANTE> | expressao() | vetorCheio())
+	< ATRIBUICAO> (<CONSTANTE> semiExpressao() | vetorCheio())
 }
 
 void atribuicaoFloat() :
@@ -176,17 +176,16 @@ void tipo() :
 	< TIPOINT > | < TIPOFLOAT> | < TIPOSTRING> 
 }
 
-void var() :
-{}
-{
-	< ID >
-
-}
-
 void expressao() :
 {}
 {
 	termo()((< MAIS > | < MENOS >) termo() )*
+}
+
+void semiExpressao() :
+{}
+{
+	((< MAIS > | < MENOS >) termo() )*
 }
 
 void termo() :
@@ -225,5 +224,17 @@ void condicao() :
 {
 	< ID >  operadores() (< ID > | < CONSTANTE >)
 
+}
+
+void para() :
+{}
+{
+	< LOOPFOR > <ABREPARENT > (declaracao())? < FIM > condicao() < FIM > (expressao())? < FECHAPARENT > bloco()
+}
+
+void enquanto() :
+{}
+{
+	< LOOPWHILE > <ABREPARENT > condicao() < FECHAPARENT > bloco() ( < ELSE > bloco())?
 }
   
