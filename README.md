@@ -36,13 +36,13 @@ src/
 ```
 
 
-##⚙️ Tecnologias Utilizadas
+## ⚙️ Tecnologias Utilizadas
 -Java (JDK 17)
 -JavaCC
 -Eclipse IDE
 
 
-##🚀 Como Executar
+## 🚀 Como Executar
 1. Pré-requisitos
 -Java JDK 17 instalado
 -JavaCC configurado
@@ -53,7 +53,7 @@ src/
 -java compilador.ExMachina < entrada.txt
 
 
-##🧩 Exemplo da Linguagem
+## 🧩 Exemplo da Linguagem
 ```text
 initium
     numerus a = 10;
@@ -62,7 +62,7 @@ initium
 finis
 ```
 
-##⚠️ Tratamento de Erros
+## ⚠️ Tratamento de Erros
 
 O compilador realiza:
 
@@ -71,13 +71,13 @@ Detecção de erros sintáticos (estrutura incorreta)
 
 Mensagens de erro são exibidas para auxiliar na correção.
 
-##📚 Conceitos Aplicados
+## 📚 Conceitos Aplicados
 Gramáticas livres de contexto
 Parser LL (JavaCC)
 Expressões regulares para tokens
 Estrutura básica de compiladores
 
-##🔮 Melhorias Futuras
+## 🔮 Melhorias Futuras
 Análise semântica
 Geração de código intermediário
 Interface gráfica
