@@ -90,6 +90,9 @@ TOKEN :
 | < LOOPWHILE : "dum" >
 | < ABREVETOR : "Catena">
 | < FECHAVETOR : "Connexa">
+| < BREAK: "mori">
+| < CONTINUE: "proximus">
+| < RETURN: "reditus">
 
 }
 
@@ -105,8 +108,10 @@ TOKEN :
 
 int inicio() :
 { }
-{	 < MAIN > bloco()
-	
+{
+  	(declaracao())*	 < MAIN > bloco()
+	(declaracao())*
+	"."
 	{
 	  return 0;
 	}
@@ -114,18 +119,28 @@ int inicio() :
 | < EOF> { return 1; }
 }
 
+void declaraFuncao() :
+{ }
+{
+  (< ABREPARENT >tipo() < ID >(< SEPARADOR > tipo() < ID >)*< FECHAPARENT >) bloco()
+}
+
+void declaraVariavel() :
+{ }
+{
+  (vetorTamanho())? (< SEPARADOR > < ID > )* (atribuicao())? < FIM >
+}
+
 void bloco() :
 { }
 {
-	< ABREBLOCO > (declaracao() <FIM> | condicional() | enquanto() | para())* < FECHABLOCO>
+	< ABREBLOCO > (declaracao() | condicional() | enquanto() | para() | controladores() )* < FECHABLOCO >
 }
 
 void declaracao() :
 { }
 {
-	(< TIPOINT >(vetorTamanho())? < ID > (atribuicaoInt())? |
-	 < TIPOFLOAT >(vetorTamanho())? < ID > (atribuicaoFloat())? |
-	 < TIPOSTRING >(vetorTamanho())? < ID > (atribuicaoString())?) 
+	(tipo())? < ID > (declaraFuncao() | declaraVariavel())
 }
 
 void vetorTamanho() :
@@ -146,28 +161,17 @@ void valor() :
   < CONSTANTE > | < CADEIA > | < REAL >
 }
 
-void declaracaoMultipla() :
-{ }
-{
-	declaracao() ( < SEPARADOR > declaracao())*
-}
-
-void atribuicaoString() :
+void atribuicao() :
 {}
 {
-	< ATRIBUICAO> (<CADEIA> | vetorCheio())
+	< ATRIBUICAO> (<CADEIA> | <CONSTANTE> semiExpressao() | < REAL > | < ID >  |  vetorCheio())
+				  (< SEPARADOR > (<CADEIA> | <CONSTANTE> semiExpressao() | < REAL > | < ID > ))*
 }
 
-void atribuicaoInt() :
+void controladores() :
 {}
 {
-	< ATRIBUICAO> (<CONSTANTE> semiExpressao() | vetorCheio())
-}
-
-void atribuicaoFloat() :
-{}
-{
-	< ATRIBUICAO> (< REAL > | expressao() | vetorCheio())
+  ( <BREAK > | < CONTINUE> | <RETURN > expressao()) < FIM>
 }
 
 void tipo() :
@@ -204,7 +208,8 @@ void elemento() :
 {}
 {
 	< CONSTANTE >
-| 	<ABREPARENT > expressao() < FECHAPARENT >
+| 	< ID >
+|   < ABREPARENT > expressao() < FECHAPARENT >
 }
 
 void operadores() :
@@ -235,6 +240,6 @@ void para() :
 void enquanto() :
 {}
 {
-	< LOOPWHILE > <ABREPARENT > condicao() < FECHAPARENT > bloco() ( < ELSE > bloco())?
+	< LOOPWHILE > <ABREPARENT > condicao() < FECHAPARENT > bloco()
 }
   

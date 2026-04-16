@@ -63,17 +63,23 @@ public interface ExMachinaConstants {
   /** RegularExpression Id. */
   int FECHAVETOR = 30;
   /** RegularExpression Id. */
-  int CONSTANTE = 31;
+  int BREAK = 31;
   /** RegularExpression Id. */
-  int DIGITO = 32;
+  int CONTINUE = 32;
   /** RegularExpression Id. */
-  int REAL = 33;
+  int RETURN = 33;
   /** RegularExpression Id. */
-  int ID = 34;
+  int CONSTANTE = 34;
   /** RegularExpression Id. */
-  int CARACTERE = 35;
+  int DIGITO = 35;
   /** RegularExpression Id. */
-  int CADEIA = 36;
+  int REAL = 36;
+  /** RegularExpression Id. */
+  int ID = 37;
+  /** RegularExpression Id. */
+  int CARACTERE = 38;
+  /** RegularExpression Id. */
+  int CADEIA = 39;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -111,12 +117,16 @@ public interface ExMachinaConstants {
     "\"dum\"",
     "\"Catena\"",
     "\"Connexa\"",
+    "\"mori\"",
+    "\"proximus\"",
+    "\"reditus\"",
     "<CONSTANTE>",
     "<DIGITO>",
     "<REAL>",
     "<ID>",
     "<CARACTERE>",
     "<CADEIA>",
+    "\".\"",
   };
 
 }
