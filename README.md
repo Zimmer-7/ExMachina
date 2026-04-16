@@ -37,32 +37,30 @@ src/
 
 
 ##⚙️ Tecnologias Utilizadas
-
-Java (JDK 17)
-JavaCC
-Eclipse IDE
-
+-Java (JDK 17)
+-JavaCC
+-Eclipse IDE
 
 
 ##🚀 Como Executar
-
 1. Pré-requisitos
-Java JDK 17 instalado
-JavaCC configurado
-IDE (recomendado: Eclipse)
+-Java JDK 17 instalado
+-JavaCC configurado
+-IDE (recomendado: Eclipse)
 2. Compilar
-javac compilador/*.java
+-javac compilador/*.java
 3. Executar
-java compilador.ExMachina < entrada.txt
+-java compilador.ExMachina < entrada.txt
 
 
 ##🧩 Exemplo da Linguagem
+```text
 initium
     numerus a = 10;
     numerus b = 20;
     scribere(a + b);
 finis
-
+```
 
 ##⚠️ Tratamento de Erros
 
