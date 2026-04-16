@@ -89,9 +89,9 @@ Expansão da linguagem (loops, funções, etc.)
 <table>
   <tr>
     <td align="center">
-      <a href="https://github.com/seu-usuario">
-        <img src="https://github.com/seu-usuario.png" width="100px;" alt="Erik"/><br>
-        <sub><b>Erik</b></sub>
+      <a href="https://github.com/ErikMazzuco">
+        <img src="https://github.com/ErikMazzuco.png" width="100px;" alt="Erik"/><br>
+        <sub><b>Erik Mazzuco</b></sub>
       </a>
     </td>
     <td align="center">
@@ -103,7 +103,13 @@ Expansão da linguagem (loops, funções, etc.)
     <td align="center">
       <a href="https://github.com/Yasmin-YY">
         <img src="https://github.com/Yasmin-YY.png" width="100px;" alt="Yasmin"/><br>
-        <sub><b>Yasmin</b></sub>
+        <sub><b>Yasmin Yamamoto</b></sub>
+      </a>
+    </td>
+    <td align="center">
+      <a href="https://github.com/Zimmer-7">
+        <img src="https://github.com/Zimmer-7.png" width="100px;" alt="Zimmer-7"/><br>
+        <sub><b>Gabriel Zimer</b></sub>
       </a>
     </td>
   </tr>
