@@ -2,7 +2,7 @@
 
 ## 📌 Descrição
 
-O **ExMachina** é um compilador desenvolvido como projeto acadêmico, utilizando a ferramenta **JavaCC** em ambiente Java. Sua principal característica é a definição de uma linguagem baseada em termos do latim, explorando conceitos fundamentais da construção de compiladores.
+O **ExMachina** é um compilador desenvolvido como projeto acadêmico, utilizando a ferramenta **JavaCC** em ambiente Java. Sua principal característica é a definição de uma linguagem baseada em termos do **LATIM**, explorando conceitos fundamentais da construção de compiladores.
 
 O projeto tem como objetivo aplicar, na prática, conceitos como análise léxica, sintática e tratamento de estruturas formais de linguagem.
 
