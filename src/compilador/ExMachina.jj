@@ -17,7 +17,7 @@ public class ExMachina
     while (true)
     {
       System.out.println("Lendo o input padrao");
-      System.out.print("Insira uma declaracao de variavel:\n");
+      System.out.print("Codifique em Latim:\n");
       try
       {
         switch (ExMachina.inicio())
@@ -34,7 +34,7 @@ public class ExMachina
       }
       catch (Exception e)
       {
-        System.out.println("NOK.");
+        System.out.println("Defectum");
         System.out.println(e.getMessage());
         ExMachina.ReInit(System.in);
       }
@@ -128,7 +128,7 @@ void declaraFuncao() :
 void declaraVariavel() :
 { }
 {
-  (vetorTamanho())? (< SEPARADOR > < ID > )* (atribuicao())? < FIM >
+  (vetorTamanho())? (< SEPARADOR > < ID > )* (atribuicao())? (< FIM >)?
 }
 
 void bloco() :
@@ -164,8 +164,8 @@ void valor() :
 void atribuicao() :
 {}
 {
-	< ATRIBUICAO> (<CADEIA> | <CONSTANTE> semiExpressao() | < REAL > | < ID >  |  vetorCheio())
-				  (< SEPARADOR > (<CADEIA> | <CONSTANTE> semiExpressao() | < REAL > | < ID > ))*
+	< ATRIBUICAO > (< CADEIA > | < CONSTANTE > semiExpressao() | < REAL > | < ID > semiExpressao() |  vetorCheio())
+				  (< SEPARADOR > (< CADEIA > | < CONSTANTE > semiExpressao() | < REAL > | < ID > semiExpressao() ))*
 }
 
 void controladores() :
@@ -234,7 +234,7 @@ void condicao() :
 void para() :
 {}
 {
-	< LOOPFOR > <ABREPARENT > (declaracao())? < FIM > condicao() < FIM > (expressao())? < FECHAPARENT > bloco()
+	< LOOPFOR > <ABREPARENT > (declaracao())? condicao() < FIM > (declaracao())? < FECHAPARENT > bloco()
 }
 
 void enquanto() :
