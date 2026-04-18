@@ -55,31 +55,33 @@ public interface ExMachinaConstants {
   /** RegularExpression Id. */
   int MENORIGUAL = 26;
   /** RegularExpression Id. */
-  int LOOPFOR = 27;
+  int DIFERENTE = 27;
   /** RegularExpression Id. */
-  int LOOPWHILE = 28;
+  int LOOPFOR = 28;
   /** RegularExpression Id. */
-  int ABREVETOR = 29;
+  int LOOPWHILE = 29;
   /** RegularExpression Id. */
-  int FECHAVETOR = 30;
+  int ABREVETOR = 30;
   /** RegularExpression Id. */
-  int BREAK = 31;
+  int FECHAVETOR = 31;
   /** RegularExpression Id. */
-  int CONTINUE = 32;
+  int BREAK = 32;
   /** RegularExpression Id. */
-  int RETURN = 33;
+  int CONTINUE = 33;
   /** RegularExpression Id. */
-  int CONSTANTE = 34;
+  int RETURN = 34;
   /** RegularExpression Id. */
-  int DIGITO = 35;
+  int CONSTANTE = 35;
   /** RegularExpression Id. */
-  int REAL = 36;
+  int DIGITO = 36;
   /** RegularExpression Id. */
-  int ID = 37;
+  int REAL = 37;
   /** RegularExpression Id. */
-  int CARACTERE = 38;
+  int ID = 38;
   /** RegularExpression Id. */
-  int CADEIA = 39;
+  int CARACTERE = 39;
+  /** RegularExpression Id. */
+  int CADEIA = 40;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -109,10 +111,11 @@ public interface ExMachinaConstants {
     "\"ceteris\"",
     "\"paribus\"",
     "\"idem\"",
-    "\">\"",
-    "\"<\"",
-    "\">=\"",
-    "\"<=\"",
+    "\"maximus\"",
+    "\"minus\"",
+    "\"aequalis\"",
+    "\"iunior\"",
+    "\"diversus\"",
     "\"iterabilis\"",
     "\"dum\"",
     "\"Catena\"",

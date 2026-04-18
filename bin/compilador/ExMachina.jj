@@ -82,10 +82,11 @@ TOKEN :
 | < IF : "ceteris" >
 | < ELSE : "paribus" >
 | < IGUAL : "idem" >
-| < MAIOR : ">" >
-| < MENOR : "<" >
-| < MAIORIGUAL : ">=" >
-| < MENORIGUAL : "<=" >
+| < MAIOR : "maximus" >
+| < MENOR : "minus" >
+| < MAIORIGUAL : "aequalis" >
+| < MENORIGUAL : "iunior" >
+| < DIFERENTE : "diversus">
 | < LOOPFOR : "iterabilis" >
 | < LOOPWHILE : "dum" >
 | < ABREVETOR : "Catena">
@@ -119,6 +120,12 @@ int inicio() :
 | < EOF> { return 1; }
 }
 
+void declaracao() :
+{ }
+{
+	tipo() < ID > ( declaraFuncao() | declaraVariavel())
+}
+
 void declaraFuncao() :
 { }
 {
@@ -128,19 +135,19 @@ void declaraFuncao() :
 void declaraVariavel() :
 { }
 {
-  (vetorTamanho())? (< SEPARADOR > < ID > )* (atribuicao())? (< FIM >)?
+  (vetorTamanho())?(< SEPARADOR > < ID > )* (atribuicao())? < FIM >
+}
+
+void chamadaFuncao() :
+{ }
+{
+  <ID> < ABREPARENT> (expressao() (< SEPARADOR > expressao())* )?< FECHAPARENT >
 }
 
 void bloco() :
 { }
 {
-	< ABREBLOCO > (declaracao() | condicional() | enquanto() | para() | controladores() )* < FECHABLOCO >
-}
-
-void declaracao() :
-{ }
-{
-	(tipo())? < ID > (declaraFuncao() | declaraVariavel())
+	< ABREBLOCO > (declaracao() | condicional() | enquanto() | para() | controladores() | chamadaFuncao())* < FECHABLOCO >
 }
 
 void vetorTamanho() :
@@ -164,8 +171,13 @@ void valor() :
 void atribuicao() :
 {}
 {
-	< ATRIBUICAO > (< CADEIA > | < CONSTANTE > semiExpressao() | < REAL > | < ID > semiExpressao() |  vetorCheio())
-				  (< SEPARADOR > (< CADEIA > | < CONSTANTE > semiExpressao() | < REAL > | < ID > semiExpressao() ))*
+	< ATRIBUICAO > (valores() |  vetorCheio()) (< SEPARADOR > valores())*
+}
+
+void valores() :
+{}
+{
+  < CADEIA > | < CONSTANTE > semiExpressao() | < REAL > | < ID > semiExpressao()
 }
 
 void controladores() :
@@ -215,7 +227,7 @@ void elemento() :
 void operadores() :
 {}
 {
-	<IGUAL > | < MAIOR > | < MENOR > | < MAIORIGUAL > | < MENORIGUAL >
+	<IGUAL > | < MAIOR > | < MENOR > | < MAIORIGUAL > | < MENORIGUAL > | < DIFERENTE >
 }
 
 void condicional() :
