@@ -71,17 +71,19 @@ public interface ExMachinaConstants {
   /** RegularExpression Id. */
   int RETURN = 34;
   /** RegularExpression Id. */
-  int CONSTANTE = 35;
+  int INCREMENTO = 35;
   /** RegularExpression Id. */
-  int DIGITO = 36;
+  int CONSTANTE = 36;
   /** RegularExpression Id. */
-  int REAL = 37;
+  int DIGITO = 37;
   /** RegularExpression Id. */
-  int ID = 38;
+  int REAL = 38;
   /** RegularExpression Id. */
-  int CARACTERE = 39;
+  int ID = 39;
   /** RegularExpression Id. */
-  int CADEIA = 40;
+  int CARACTERE = 40;
+  /** RegularExpression Id. */
+  int CADEIA = 41;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -123,6 +125,7 @@ public interface ExMachinaConstants {
     "\"mori\"",
     "\"proximus\"",
     "\"reditus\"",
+    "\"Auctus\"",
     "<CONSTANTE>",
     "<DIGITO>",
     "<REAL>",

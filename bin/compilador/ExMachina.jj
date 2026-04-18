@@ -94,6 +94,7 @@ TOKEN :
 | < BREAK: "mori">
 | < CONTINUE: "proximus">
 | < RETURN: "reditus">
+| < INCREMENTO : "Auctus" >
 
 }
 
@@ -246,7 +247,7 @@ void condicao() :
 void para() :
 {}
 {
-	< LOOPFOR > <ABREPARENT > (declaracao())? condicao() < FIM > (declaracao())? < FECHAPARENT > bloco()
+	< LOOPFOR > <ABREPARENT > (declaracao())? condicao() < FIM > ( incremento() | declaracao())? < FECHAPARENT > bloco()
 }
 
 void enquanto() :
@@ -254,4 +255,14 @@ void enquanto() :
 {
 	< LOOPWHILE > <ABREPARENT > condicao() < FECHAPARENT > bloco()
 }
+
+void incremento():
+{}
+{
+    < ID > <INCREMENTO > ( < SEPARADOR > <ID > <INCREMENTO >)* < FIM > 
+}
+
+
+
+  
   

@@ -77,7 +77,7 @@ public class ExMachina implements ExMachinaConstants {
         }
         declaracao();
       }
-      jj_consume_token(41);
+      jj_consume_token(42);
 {if ("" != null) return 0;}
       break;
       }
@@ -655,12 +655,28 @@ public class ExMachina implements ExMachinaConstants {
     switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
     case TIPOINT:
     case TIPOFLOAT:
-    case TIPOSTRING:{
-      declaracao();
+    case TIPOSTRING:
+    case ID:{
+      switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
+      case ID:{
+        incremento();
+        break;
+        }
+      case TIPOINT:
+      case TIPOFLOAT:
+      case TIPOSTRING:{
+        declaracao();
+        break;
+        }
+      default:
+        jj_la1[32] = jj_gen;
+        jj_consume_token(-1);
+        throw new ParseException();
+      }
       break;
       }
     default:
-      jj_la1[32] = jj_gen;
+      jj_la1[33] = jj_gen;
       ;
     }
     jj_consume_token(FECHAPARENT);
@@ -675,6 +691,27 @@ public class ExMachina implements ExMachinaConstants {
     bloco();
 }
 
+  static final public void incremento() throws ParseException {
+    jj_consume_token(ID);
+    jj_consume_token(INCREMENTO);
+    label_12:
+    while (true) {
+      switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
+      case SEPARADOR:{
+        ;
+        break;
+        }
+      default:
+        jj_la1[34] = jj_gen;
+        break label_12;
+      }
+      jj_consume_token(SEPARADOR);
+      jj_consume_token(ID);
+      jj_consume_token(INCREMENTO);
+    }
+    jj_consume_token(FIM);
+}
+
   static private boolean jj_initialized_once = false;
   /** Generated Token Manager. */
   static public ExMachinaTokenManager token_source;
@@ -685,7 +722,7 @@ public class ExMachina implements ExMachinaConstants {
   static public Token jj_nt;
   static private int jj_ntk;
   static private int jj_gen;
-  static final private int[] jj_la1 = new int[33];
+  static final private int[] jj_la1 = new int[35];
   static private int[] jj_la1_0;
   static private int[] jj_la1_1;
   static {
@@ -693,10 +730,10 @@ public class ExMachina implements ExMachinaConstants {
 	   jj_la1_init_1();
 	}
 	private static void jj_la1_init_0() {
-	   jj_la1_0 = new int[] {0x38000,0x38000,0x38201,0x400c5000,0x80000,0x40000000,0x80000,0x40000,0x80000,0x1040,0x30138000,0x30138000,0x0,0x80000,0x0,0x40000000,0x80000,0x0,0x0,0x38000,0x60,0x60,0x60,0x60,0x180,0x180,0x1040,0x1000,0xfc00000,0x200000,0x0,0x38000,0x38000,};
+	   jj_la1_0 = new int[] {0x38000,0x38000,0x38201,0x400c5000,0x80000,0x40000000,0x80000,0x40000,0x80000,0x1040,0x30138000,0x30138000,0x0,0x80000,0x0,0x40000000,0x80000,0x0,0x0,0x38000,0x60,0x60,0x60,0x60,0x180,0x180,0x1040,0x1000,0xfc00000,0x200000,0x0,0x38000,0x38000,0x38000,0x80000,};
 	}
 	private static void jj_la1_init_1() {
-	   jj_la1_1 = new int[] {0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x48,0x47,0x47,0x8,0x0,0x128,0x168,0x0,0x168,0x7,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x48,0x48,0x0,0x0,0x48,0x0,0x0,};
+	   jj_la1_1 = new int[] {0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x90,0x87,0x87,0x10,0x0,0x250,0x2d0,0x0,0x2d0,0x7,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x90,0x90,0x0,0x0,0x90,0x0,0x80,0x80,0x0,};
 	}
 
   /** Constructor with InputStream. */
@@ -717,7 +754,7 @@ public class ExMachina implements ExMachinaConstants {
 	 token = new Token();
 	 jj_ntk = -1;
 	 jj_gen = 0;
-	 for (int i = 0; i < 33; i++) jj_la1[i] = -1;
+	 for (int i = 0; i < 35; i++) jj_la1[i] = -1;
   }
 
   /** Reinitialise. */
@@ -731,7 +768,7 @@ public class ExMachina implements ExMachinaConstants {
 	 token = new Token();
 	 jj_ntk = -1;
 	 jj_gen = 0;
-	 for (int i = 0; i < 33; i++) jj_la1[i] = -1;
+	 for (int i = 0; i < 35; i++) jj_la1[i] = -1;
   }
 
   /** Constructor. */
@@ -748,7 +785,7 @@ public class ExMachina implements ExMachinaConstants {
 	 token = new Token();
 	 jj_ntk = -1;
 	 jj_gen = 0;
-	 for (int i = 0; i < 33; i++) jj_la1[i] = -1;
+	 for (int i = 0; i < 35; i++) jj_la1[i] = -1;
   }
 
   /** Reinitialise. */
@@ -766,7 +803,7 @@ public class ExMachina implements ExMachinaConstants {
 	 token = new Token();
 	 jj_ntk = -1;
 	 jj_gen = 0;
-	 for (int i = 0; i < 33; i++) jj_la1[i] = -1;
+	 for (int i = 0; i < 35; i++) jj_la1[i] = -1;
   }
 
   /** Constructor with generated Token Manager. */
@@ -782,7 +819,7 @@ public class ExMachina implements ExMachinaConstants {
 	 token = new Token();
 	 jj_ntk = -1;
 	 jj_gen = 0;
-	 for (int i = 0; i < 33; i++) jj_la1[i] = -1;
+	 for (int i = 0; i < 35; i++) jj_la1[i] = -1;
   }
 
   /** Reinitialise. */
@@ -791,7 +828,7 @@ public class ExMachina implements ExMachinaConstants {
 	 token = new Token();
 	 jj_ntk = -1;
 	 jj_gen = 0;
-	 for (int i = 0; i < 33; i++) jj_la1[i] = -1;
+	 for (int i = 0; i < 35; i++) jj_la1[i] = -1;
   }
 
   static private Token jj_consume_token(int kind) throws ParseException {
@@ -842,12 +879,12 @@ public class ExMachina implements ExMachinaConstants {
   /** Generate ParseException. */
   static public ParseException generateParseException() {
 	 jj_expentries.clear();
-	 boolean[] la1tokens = new boolean[42];
+	 boolean[] la1tokens = new boolean[43];
 	 if (jj_kind >= 0) {
 	   la1tokens[jj_kind] = true;
 	   jj_kind = -1;
 	 }
-	 for (int i = 0; i < 33; i++) {
+	 for (int i = 0; i < 35; i++) {
 	   if (jj_la1[i] == jj_gen) {
 		 for (int j = 0; j < 32; j++) {
 		   if ((jj_la1_0[i] & (1<<j)) != 0) {
@@ -859,7 +896,7 @@ public class ExMachina implements ExMachinaConstants {
 		 }
 	   }
 	 }
-	 for (int i = 0; i < 42; i++) {
+	 for (int i = 0; i < 43; i++) {
 	   if (la1tokens[i]) {
 		 jj_expentry = new int[1];
 		 jj_expentry[0] = i;
