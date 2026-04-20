@@ -178,7 +178,11 @@ void atribuicao() :
 void valores() :
 {}
 {
-  < CADEIA > | < CONSTANTE > semiExpressao() | < REAL > | < ID > semiExpressao()
+  < CADEIA >
+| < CONSTANTE > semiExpressao()
+| < REAL > semiExpressao()
+| LOOKAHEAD(2) chamadaFuncao() semiExpressao()
+| < ID > semiExpressao()
 }
 
 void controladores() :
