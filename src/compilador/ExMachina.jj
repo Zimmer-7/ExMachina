@@ -16,14 +16,13 @@ public class ExMachina
     ExMachina parser = new ExMachina(System.in);
     while (true)
     {
-      System.out.println("Lendo o input padrao");
       System.out.print("Codifique em Latim:\n");
       try
       {
         switch (ExMachina.inicio())
         {
           case 0 : 
-          System.out.println("OK.");
+          System.out.println("Re vera bonum est.");
           break;
           case 1 : 
           System.out.println("Goodbye.");
@@ -118,7 +117,7 @@ int inicio() :
 	  return 0;
 	}
 
-| < EOF> { return 1; }
+| < EOF > { return 1; }
 }
 
 void declaracao() :
@@ -139,22 +138,34 @@ void declaraVariavel() :
   (vetorTamanho())?(< SEPARADOR > < ID > )* (atribuicao())? < FIM >
 }
 
+void chamada() :
+{ }
+{
+  <ID> (chamadaFuncao() | chamadaVariavel() | incremento())
+}
+
 void chamadaFuncao() :
 { }
 {
-  <ID> < ABREPARENT> (expressao() (< SEPARADOR > expressao())* )?< FECHAPARENT >
+  < ABREPARENT> (expressao() (< SEPARADOR > expressao())*)?< FECHAPARENT >
+}
+
+void chamadaVariavel() :
+{ }
+{
+  (atribuicao())? < FIM >
 }
 
 void bloco() :
 { }
 {
-	< ABREBLOCO > (declaracao() | condicional() | enquanto() | para() | controladores() | chamadaFuncao())* < FECHABLOCO >
+	< ABREBLOCO > (declaracao() | condicional() | enquanto() | para() | controladores() | chamada() | incremento())* < FECHABLOCO >
 }
 
 void vetorTamanho() :
 {}
 {
-  < ABREVETOR > (< CONSTANTE >)? < FECHAVETOR >
+  < ABREVETOR > (< CONSTANTE > semiExpressao() | < ID > semiExpressao())? < FECHAVETOR >
 }
 
 void vetorCheio() :
@@ -181,7 +192,7 @@ void valores() :
   < CADEIA >
 | < CONSTANTE > semiExpressao()
 | < REAL > semiExpressao()
-| LOOKAHEAD(2) chamadaFuncao() semiExpressao()
+| chamadaFuncao() semiExpressao()
 | < ID > semiExpressao()
 }
 
@@ -206,7 +217,7 @@ void expressao() :
 void semiExpressao() :
 {}
 {
-	((< MAIS > | < MENOS >) termo() )*
+	((< MAIS > | < MENOS > | < MULTIPLICA > | < DIVIDE >) termo())*
 }
 
 void termo() :
@@ -226,6 +237,7 @@ void elemento() :
 {
 	< CONSTANTE >
 | 	< ID >
+|   < REAL >
 |   < ABREPARENT > expressao() < FECHAPARENT >
 }
 
@@ -251,7 +263,7 @@ void condicao() :
 void para() :
 {}
 {
-	< LOOPFOR > <ABREPARENT > (declaracao())? condicao() < FIM > ( incremento() | declaracao())? < FECHAPARENT > bloco()
+	< LOOPFOR > <ABREPARENT > (declaracao())? condicao() < FIM > ( < ID > incremento() | declaraVariavel())? < FECHAPARENT > bloco()
 }
 
 void enquanto() :
@@ -263,7 +275,7 @@ void enquanto() :
 void incremento():
 {}
 {
-    < ID > <INCREMENTO > ( < SEPARADOR > <ID > <INCREMENTO >)* < FIM > 
+    <INCREMENTO > ( < SEPARADOR > <ID > <INCREMENTO >)* < FIM > 
 }
 
 
