@@ -227,6 +227,7 @@ public class ExMachina implements ExMachinaConstants {
       ;
     }
     jj_consume_token(FECHAPARENT);
+    jj_consume_token(FIM);
 }
 
   static final public void chamadaVariavel() throws ParseException {

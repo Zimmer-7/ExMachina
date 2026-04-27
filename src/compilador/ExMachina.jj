@@ -147,7 +147,7 @@ void chamada() :
 void chamadaFuncao() :
 { }
 {
-  < ABREPARENT> (expressao() (< SEPARADOR > expressao())*)?< FECHAPARENT >
+  < ABREPARENT> (expressao() (< SEPARADOR > expressao())*)?< FECHAPARENT > < FIM >
 }
 
 void chamadaVariavel() :
