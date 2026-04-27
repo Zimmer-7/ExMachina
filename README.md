@@ -55,11 +55,22 @@ src/
 
 ## 🧩 Exemplo da Linguagem
 ```text
-initium
-    numerus a = 10;
-    numerus b = 20;
-    scribere(a + b);
-finis
+MagnumOpus
+Aperta
+    totum n memento 5 ~
+    totum resultado memento 1 ~
+
+    dum Aperi n maximus 1 Claude
+    Aperta
+        resultado memento resultado * n ~
+        n memento n - 1 ~
+    Clauderes
+
+    imprime Aperi resultado Claude ~
+
+Clauderes
+.
+
 ```
 
 ## ⚠️ Tratamento de Erros
