@@ -77,7 +77,7 @@ public class ExMachina implements ExMachinaConstants {
         declaracao();
       }
       jj_consume_token(42);
-{if ("" != null) return 0;}
+
       break;
       }
     case 0:{
@@ -203,7 +203,6 @@ public class ExMachina implements ExMachinaConstants {
     case MENOS:
     case ABREPARENT:
     case CONSTANTE:
-    case REAL:
     case ID:{
       expressao();
       label_5:
@@ -368,10 +367,6 @@ public class ExMachina implements ExMachinaConstants {
       jj_consume_token(CADEIA);
       break;
       }
-    case REAL:{
-      jj_consume_token(REAL);
-      break;
-      }
     default:
       jj_la1[17] = jj_gen;
       jj_consume_token(-1);
@@ -384,7 +379,6 @@ public class ExMachina implements ExMachinaConstants {
     switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
     case ABREPARENT:
     case CONSTANTE:
-    case REAL:
     case ID:
     case CADEIA:{
       valores();
@@ -423,11 +417,6 @@ public class ExMachina implements ExMachinaConstants {
       }
     case CONSTANTE:{
       jj_consume_token(CONSTANTE);
-      semiExpressao();
-      break;
-      }
-    case REAL:{
-      jj_consume_token(REAL);
       semiExpressao();
       break;
       }
@@ -529,9 +518,7 @@ public class ExMachina implements ExMachinaConstants {
     while (true) {
       switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
       case MAIS:
-      case MENOS:
-      case MULTIPLICA:
-      case DIVIDE:{
+      case MENOS:{
         ;
         break;
         }
@@ -546,14 +533,6 @@ public class ExMachina implements ExMachinaConstants {
         }
       case MENOS:{
         jj_consume_token(MENOS);
-        break;
-        }
-      case MULTIPLICA:{
-        jj_consume_token(MULTIPLICA);
-        break;
-        }
-      case DIVIDE:{
-        jj_consume_token(DIVIDE);
         break;
         }
       default:
@@ -606,7 +585,6 @@ public class ExMachina implements ExMachinaConstants {
       }
     case ABREPARENT:
     case CONSTANTE:
-    case REAL:
     case ID:{
       elemento();
       break;
@@ -626,10 +604,6 @@ public class ExMachina implements ExMachinaConstants {
       }
     case ID:{
       jj_consume_token(ID);
-      break;
-      }
-    case REAL:{
-      jj_consume_token(REAL);
       break;
       }
     case ABREPARENT:{
@@ -811,10 +785,10 @@ public class ExMachina implements ExMachinaConstants {
 	   jj_la1_init_1();
 	}
 	private static void jj_la1_init_0() {
-	   jj_la1_0 = new int[] {0x38000,0x38000,0x38201,0x400c5000,0x80000,0x40000000,0x80000,0x40000,0x45000,0x80000,0x1040,0x40000,0x30138000,0x30138000,0x0,0x0,0x80000,0x0,0x40001000,0x80000,0x1000,0x0,0x38000,0x60,0x60,0x1e0,0x1e0,0x180,0x180,0x1040,0x1000,0xfc00000,0x200000,0x0,0x38000,0x400c4000,0x400c4000,0x80000,};
+	   jj_la1_0 = new int[] {0x38000,0x38000,0x38201,0x400c5000,0x80000,0x40000000,0x80000,0x40000,0x45000,0x80000,0x1040,0x40000,0x30138000,0x30138000,0x0,0x0,0x80000,0x0,0x40001000,0x80000,0x1000,0x0,0x38000,0x60,0x60,0x60,0x60,0x180,0x180,0x1040,0x1000,0xfc00000,0x200000,0x0,0x38000,0x400c4000,0x400c4000,0x80000,};
 	}
 	private static void jj_la1_init_1() {
-	   jj_la1_1 = new int[] {0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x8,0x0,0xd0,0x0,0x8f,0x8f,0x90,0x90,0x0,0x250,0x2d0,0x0,0x2d0,0x7,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0xd0,0xd0,0x0,0x0,0x90,0x0,0x80,0x80,0x0,};
+	   jj_la1_1 = new int[] {0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x8,0x0,0x90,0x0,0x8f,0x8f,0x90,0x90,0x0,0x210,0x290,0x0,0x290,0x7,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x90,0x90,0x0,0x0,0x90,0x0,0x80,0x80,0x0,};
 	}
 
   /** Constructor with InputStream. */

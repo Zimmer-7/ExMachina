@@ -99,9 +99,9 @@ TOKEN :
 
 TOKEN :
 {
-  < CONSTANTE : (< DIGITO >)+ >
+  < CONSTANTE : < DIGITO > ((< DIGITO >)* | < REAL >) >
 | < DIGITO : [ "0"-"9" ] >
-| < REAL : < CONSTANTE >"."< CONSTANTE > >
+| < REAL : "."(< DIGITO >)+ >
 | < ID: (<CARACTERE >)+>
 | < CARACTERE : ["a" - "z"] | ["A" - "Z"]>
 | < CADEIA : "\"" (<CARACTERE> | <DIGITO> | " ")* "\"" >
@@ -114,7 +114,7 @@ int inicio() :
 	(declaracao())*
 	"."
 	{
-	  return 0;
+	  
 	}
 
 | < EOF > { return 1; }
@@ -177,7 +177,7 @@ void vetorCheio() :
 void valor() :
 {}
 {
-  < CONSTANTE > | < CADEIA > | < REAL >
+  < CONSTANTE > | < CADEIA >
 }
 
 void atribuicao() :
@@ -191,7 +191,6 @@ void valores() :
 {
   < CADEIA >
 | < CONSTANTE > semiExpressao()
-| < REAL > semiExpressao()
 | chamadaFuncao() semiExpressao()
 | < ID > semiExpressao()
 }
@@ -217,7 +216,7 @@ void expressao() :
 void semiExpressao() :
 {}
 {
-	((< MAIS > | < MENOS > | < MULTIPLICA > | < DIVIDE >) termo())*
+	((< MAIS > | < MENOS >) termo())*
 }
 
 void termo() :
@@ -237,7 +236,6 @@ void elemento() :
 {
 	< CONSTANTE >
 | 	< ID >
-|   < REAL >
 |   < ABREPARENT > expressao() < FECHAPARENT >
 }
 
