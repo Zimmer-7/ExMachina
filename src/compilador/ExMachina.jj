@@ -1,50 +1,49 @@
 /**
  * JavaCC template file created by SF JavaCC plugin 1.5.28+ wizard for JavaCC 1.5.0+
  */
+
 options
 {
   static = true;
 }
 
 PARSER_BEGIN(ExMachina)
+
 package compilador;
+import java.io.IOException;
+import java.io.FileNotFoundException;
+import java.io.Reader;
 
 public class ExMachina
 {
-  public static void main(String args []) throws ParseException
+  public static void main(String args [])
   {
-    ExMachina parser = new ExMachina(System.in);
-    while (true)
-    {
-      System.out.print("Codifique em Latim:\n");
-      try
-      {
-        switch (ExMachina.inicio())
-        {
-          case 0 : 
-          System.out.println("Re vera bonum est.");
-          break;
-          case 1 : 
-          System.out.println("Goodbye.");
-          break;
-          default : 
-          break;
-        }
-      }
-      catch (Exception e)
-      {
-        System.out.println("Defectum");
-        System.out.println(e.getMessage());
-        ExMachina.ReInit(System.in);
-      }
-      catch (Error e)
-      {
-        System.out.println("Oops.");
-        System.out.println(e.getMessage());
-        break;
-      }
+    
+    if (args.length < 1) {
+        System.err.println("Uso: java compilador.ExMachina <arquivo>");
+        System.exit(1);
+    }
+	
+    try (Reader r = LerArquivo.abrir(args[0])) {
+        ExMachina parser = new ExMachina(r);
+        parser.inicio();
+        System.out.println("Análise concluída com sucesso.");
+    } catch (FileNotFoundException e) {
+        System.err.println("Arquivo não encontrado: " + args[0]);
+        System.exit(2);
+    } catch (IOException e) {
+        System.err.println("Erro de I/O: " + e.getMessage());
+        System.exit(2);
+    } catch (ParseException e) {
+        System.err.println("Erro de sintaxe: " + e.getMessage());
+        System.exit(3);
+    } catch (TokenMgrError e) {
+        System.err.println("Erro léxico: " + e.getMessage());
+        System.exit(3);
     }
   }
+
+  
 }
 
 PARSER_END(ExMachina)
@@ -107,17 +106,13 @@ TOKEN :
 | < CADEIA : "\"" (<CARACTERE> | <DIGITO> | " ")* "\"" >
 }
 
-int inicio() :
+void inicio() :
 { }
 {
   	(declaracao())*	 < MAIN > bloco()
 	(declaracao())*
-	"."
-	{
-	  
-	}
 
-| < EOF > { return 1; }
+| < EOF > 
 }
 
 void declaracao() :
