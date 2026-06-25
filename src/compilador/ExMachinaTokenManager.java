@@ -17,6 +17,8 @@ private static final int jjStopStringLiteralDfa_0(int pos, long active0){
    switch (pos)
    {
       case 0:
+         if ((active0 & 0x40000000000L) != 0L)
+            return 1;
          if ((active0 & 0xffff7be00L) != 0L)
          {
             jjmatchedKind = 39;
@@ -121,9 +123,9 @@ static private int jjMoveStringLiteralDfa0_0(){
    switch(curChar)
    {
       case 40:
-         return jjStopAtPos(0, 42);
-      case 41:
          return jjStopAtPos(0, 43);
+      case 41:
+         return jjStopAtPos(0, 44);
       case 42:
          return jjStopAtPos(0, 7);
       case 43:
@@ -132,6 +134,8 @@ static private int jjMoveStringLiteralDfa0_0(){
          return jjStopAtPos(0, 19);
       case 45:
          return jjStopAtPos(0, 6);
+      case 46:
+         return jjStartNfaWithStates_0(0, 42, 1);
       case 47:
          return jjStopAtPos(0, 8);
       case 65:
@@ -640,7 +644,7 @@ public static final String[] jjstrLiteralImages = {
 "\151\165\156\151\157\162", "\144\151\166\145\162\163\165\163", 
 "\151\164\145\162\141\142\151\154\151\163", "\144\165\155", "\103\141\164\145\156\141", "\103\157\156\156\145\170\141", 
 "\155\157\162\151", "\160\162\157\170\151\155\165\163", "\162\145\144\151\164\165\163", 
-"\101\165\143\164\165\163", null, null, null, null, null, null, "\50", "\51", };
+"\101\165\143\164\165\163", null, null, null, null, null, null, "\56", "\50", "\51", };
 static protected Token jjFillToken()
 {
    final Token t;
@@ -849,10 +853,10 @@ public static final String[] lexStateNames = {
 /** Lex State array. */
 public static final int[] jjnewLexState = {
    -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 
-   -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 
+   -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 
 };
 static final long[] jjtoToken = {
-   0xfffffffffe1L, 
+   0x1fffffffffe1L, 
 };
 static final long[] jjtoSkip = {
    0x1eL, 

@@ -6,6 +6,31 @@ import java.io.FileNotFoundException;
 import java.io.Reader;
 
 public class ExMachina implements ExMachinaConstants {
+  // CONTADOR DE ERROS (Opcional, mas ajuda a saber se o código rodou limpo)
+  private static int errosSintaticos = 0;
+
+  // NOSSO AUXILIAR DE PÂNICO: Consome tokens até achar um dos tokens "seguros" passados por parâmetro
+  public static void pulaAte(int... tokensSeguros)
+  {
+    Token t;
+    while (true)
+    {
+      t = getToken(1); // Olha o próximo token sem tirar da fila
+
+      // Se for o fim do arquivo, para o pânico imediatamente
+      if (t.kind == EOF) return;
+
+      // Se o token atual for um dos tokens seguros que queremos, interrompe o pânico
+      for (int tokenSeguro : tokensSeguros)
+      {
+        if (t.kind == tokenSeguro) return;
+      }
+
+      // Se não for seguro, joga fora e avança
+      getNextToken();
+    }
+  }
+
   public static void main(String args [])
   {
 
@@ -17,9 +42,9 @@ public class ExMachina implements ExMachinaConstants {
     try (Reader r = LerArquivo.abrir(args[0])) {
         ExMachina parser = new ExMachina(r);
         parser.inicio();
-        System.out.println("An\u00e1lise conclu\u00edda com sucesso.");
+        System.out.println("An\u00c3\u00a1lise conclu\u00c3\u00adda com sucesso.");
     } catch (FileNotFoundException e) {
-        System.err.println("Arquivo n\u00e3o encontrado: " + args[0]);
+        System.err.println("Arquivo n\u00c3\u00a3o encontrado: " + args[0]);
         System.exit(2);
     } catch (IOException e) {
         System.err.println("Erro de I/O: " + e.getMessage());
@@ -28,12 +53,12 @@ public class ExMachina implements ExMachinaConstants {
         System.err.println("Erro de sintaxe: " + e.getMessage());
         System.exit(3);
     } catch (TokenMgrError e) {
-        System.err.println("Erro l\u00e9xico: " + e.getMessage());
+        System.err.println("Erro l\u00c3\u00a9xico: " + e.getMessage());
         System.exit(3);
     }
   }
 
-  static final public void inicio() throws ParseException {
+  static final public int inicio() throws ParseException {
     switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
     case MAIN:
     case TIPOINT:
@@ -52,7 +77,14 @@ public class ExMachina implements ExMachinaConstants {
           jj_la1[0] = jj_gen;
           break label_1;
         }
-        declaracao();
+        try {
+          declaracao();
+        } catch (ParseException e) {
+errosSintaticos++;
+      System.out.println("Erro na declaracao global: " + e.getMessage());
+      pulaAte(TIPOINT, TIPOFLOAT, TIPOSTRING, MAIN); // Ponto de sincronização global
+
+        }
       }
       jj_consume_token(MAIN);
       bloco();
@@ -69,12 +101,21 @@ public class ExMachina implements ExMachinaConstants {
           jj_la1[1] = jj_gen;
           break label_2;
         }
-        declaracao();
+        try {
+          declaracao();
+        } catch (ParseException e) {
+errosSintaticos++;
+      System.out.println("Erro na declaracao global pos-Main: " + e.getMessage());
+      pulaAte(TIPOINT, TIPOFLOAT, TIPOSTRING, EOF);
+        }
       }
+      jj_consume_token(42);
+{if ("" != null) return 0;}
       break;
       }
     case 0:{
       jj_consume_token(0);
+{if ("" != null) return 1;}
       break;
       }
     default:
@@ -82,6 +123,85 @@ public class ExMachina implements ExMachinaConstants {
       jj_consume_token(-1);
       throw new ParseException();
     }
+    throw new Error("Missing return statement in function");
+}
+
+  static final public void bloco() throws ParseException {
+    jj_consume_token(ABREBLOCO);
+    label_3:
+    while (true) {
+      switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
+      case TIPOINT:
+      case TIPOFLOAT:
+      case TIPOSTRING:
+      case IF:
+      case LOOPFOR:
+      case LOOPWHILE:
+      case BREAK:
+      case CONTINUE:
+      case RETURN:
+      case INCREMENTO:
+      case ID:{
+        ;
+        break;
+        }
+      default:
+        jj_la1[3] = jj_gen;
+        break label_3;
+      }
+      try {
+        switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
+        case TIPOINT:
+        case TIPOFLOAT:
+        case TIPOSTRING:{
+          declaracao();
+          break;
+          }
+        case IF:{
+          condicional();
+          break;
+          }
+        case LOOPWHILE:{
+          enquanto();
+          break;
+          }
+        case LOOPFOR:{
+          para();
+          break;
+          }
+        case BREAK:
+        case CONTINUE:
+        case RETURN:{
+          controladores();
+          break;
+          }
+        case ID:{
+          chamada();
+          break;
+          }
+        case INCREMENTO:{
+          incremento();
+          break;
+          }
+        default:
+          jj_la1[4] = jj_gen;
+          jj_consume_token(-1);
+          throw new ParseException();
+        }
+      } catch (ParseException e) {
+errosSintaticos++;
+      System.out.println("Erro sintatico dentro do bloco: " + e.getMessage());
+
+      // Pânico: pula a linha inteira até achar um ';' (fim) ou o fim do bloco '}'
+      pulaAte(FIM, FECHABLOCO);
+
+      // Se parou no FIM (~), consome ele para a próxima linha começar limpa
+      if (getToken(1).kind == FIM) {
+        getNextToken();
+      }
+      }
+    }
+    jj_consume_token(FECHABLOCO);
 }
 
   static final public void declaracao() throws ParseException {
@@ -100,7 +220,7 @@ public class ExMachina implements ExMachinaConstants {
       break;
       }
     default:
-      jj_la1[3] = jj_gen;
+      jj_la1[5] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
@@ -110,7 +230,7 @@ public class ExMachina implements ExMachinaConstants {
     jj_consume_token(ABREPARENT);
     tipo();
     jj_consume_token(ID);
-    label_3:
+    label_4:
     while (true) {
       switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
       case SEPARADOR:{
@@ -118,8 +238,8 @@ public class ExMachina implements ExMachinaConstants {
         break;
         }
       default:
-        jj_la1[4] = jj_gen;
-        break label_3;
+        jj_la1[6] = jj_gen;
+        break label_4;
       }
       jj_consume_token(SEPARADOR);
       tipo();
@@ -136,10 +256,10 @@ public class ExMachina implements ExMachinaConstants {
       break;
       }
     default:
-      jj_la1[5] = jj_gen;
+      jj_la1[7] = jj_gen;
       ;
     }
-    label_4:
+    label_5:
     while (true) {
       switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
       case SEPARADOR:{
@@ -147,8 +267,8 @@ public class ExMachina implements ExMachinaConstants {
         break;
         }
       default:
-        jj_la1[6] = jj_gen;
-        break label_4;
+        jj_la1[8] = jj_gen;
+        break label_5;
       }
       jj_consume_token(SEPARADOR);
       jj_consume_token(ID);
@@ -159,7 +279,7 @@ public class ExMachina implements ExMachinaConstants {
       break;
       }
     default:
-      jj_la1[7] = jj_gen;
+      jj_la1[9] = jj_gen;
       ;
     }
     jj_consume_token(FIM);
@@ -182,7 +302,7 @@ public class ExMachina implements ExMachinaConstants {
       break;
       }
     default:
-      jj_la1[8] = jj_gen;
+      jj_la1[10] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
@@ -194,9 +314,9 @@ public class ExMachina implements ExMachinaConstants {
     case MENOS:
     case CONSTANTE:
     case ID:
-    case 42:{
+    case 43:{
       expressao();
-      label_5:
+      label_6:
       while (true) {
         switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
         case SEPARADOR:{
@@ -204,8 +324,8 @@ public class ExMachina implements ExMachinaConstants {
           break;
           }
         default:
-          jj_la1[9] = jj_gen;
-          break label_5;
+          jj_la1[11] = jj_gen;
+          break label_6;
         }
         jj_consume_token(SEPARADOR);
         expressao();
@@ -213,7 +333,7 @@ public class ExMachina implements ExMachinaConstants {
       break;
       }
     default:
-      jj_la1[10] = jj_gen;
+      jj_la1[12] = jj_gen;
       ;
     }
     jj_consume_token(FECHAPARENT);
@@ -227,75 +347,10 @@ public class ExMachina implements ExMachinaConstants {
       break;
       }
     default:
-      jj_la1[11] = jj_gen;
+      jj_la1[13] = jj_gen;
       ;
     }
     jj_consume_token(FIM);
-}
-
-  static final public void bloco() throws ParseException {
-    jj_consume_token(ABREBLOCO);
-    label_6:
-    while (true) {
-      switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
-      case TIPOINT:
-      case TIPOFLOAT:
-      case TIPOSTRING:
-      case IF:
-      case LOOPFOR:
-      case LOOPWHILE:
-      case BREAK:
-      case CONTINUE:
-      case RETURN:
-      case INCREMENTO:
-      case ID:{
-        ;
-        break;
-        }
-      default:
-        jj_la1[12] = jj_gen;
-        break label_6;
-      }
-      switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
-      case TIPOINT:
-      case TIPOFLOAT:
-      case TIPOSTRING:{
-        declaracao();
-        break;
-        }
-      case IF:{
-        condicional();
-        break;
-        }
-      case LOOPWHILE:{
-        enquanto();
-        break;
-        }
-      case LOOPFOR:{
-        para();
-        break;
-        }
-      case BREAK:
-      case CONTINUE:
-      case RETURN:{
-        controladores();
-        break;
-        }
-      case ID:{
-        chamada();
-        break;
-        }
-      case INCREMENTO:{
-        incremento();
-        break;
-        }
-      default:
-        jj_la1[13] = jj_gen;
-        jj_consume_token(-1);
-        throw new ParseException();
-      }
-    }
-    jj_consume_token(FECHABLOCO);
 }
 
   static final public void vetorTamanho() throws ParseException {
@@ -373,7 +428,7 @@ public class ExMachina implements ExMachinaConstants {
     case CONSTANTE:
     case ID:
     case CADEIA:
-    case 42:{
+    case 43:{
       valores();
       break;
       }
@@ -416,7 +471,7 @@ public class ExMachina implements ExMachinaConstants {
     case MENOS:
     case CONSTANTE:
     case ID:
-    case 42:{
+    case 43:{
       expressao();
       break;
       }
@@ -575,7 +630,7 @@ public class ExMachina implements ExMachinaConstants {
       }
     case CONSTANTE:
     case ID:
-    case 42:{
+    case 43:{
       elemento();
       break;
       }
@@ -596,10 +651,10 @@ public class ExMachina implements ExMachinaConstants {
       jj_consume_token(ID);
       break;
       }
-    case 42:{
-      jj_consume_token(42);
-      expressao();
+    case 43:{
       jj_consume_token(43);
+      expressao();
+      jj_consume_token(44);
       break;
       }
     default:
@@ -775,10 +830,10 @@ public class ExMachina implements ExMachinaConstants {
 	   jj_la1_init_1();
 	}
 	private static void jj_la1_init_0() {
-	   jj_la1_0 = new int[] {0x38000,0x38000,0x38201,0x400c5000,0x80000,0x40000000,0x80000,0x40000,0x45000,0x80000,0x40,0x40000,0x30138000,0x30138000,0x0,0x0,0x80000,0x0,0x40001040,0x80000,0x1040,0x0,0x38000,0x60,0x60,0x60,0x60,0x180,0x180,0x40,0x0,0xfc00000,0x200000,0x0,0x38000,0x400c4000,0x400c4000,0x80000,};
+	   jj_la1_0 = new int[] {0x38000,0x38000,0x38201,0x30138000,0x30138000,0x400c5000,0x80000,0x40000000,0x80000,0x40000,0x45000,0x80000,0x40,0x40000,0x0,0x0,0x80000,0x0,0x40001040,0x80000,0x1040,0x0,0x38000,0x60,0x60,0x60,0x60,0x180,0x180,0x40,0x0,0xfc00000,0x200000,0x0,0x38000,0x400c4000,0x400c4000,0x80000,};
 	}
 	private static void jj_la1_init_1() {
-	   jj_la1_1 = new int[] {0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x8,0x0,0x490,0x0,0x8f,0x8f,0x90,0x90,0x0,0x210,0x690,0x0,0x690,0x7,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x490,0x490,0x0,0x0,0x90,0x0,0x80,0x80,0x0,};
+	   jj_la1_1 = new int[] {0x0,0x0,0x0,0x8f,0x8f,0x0,0x0,0x0,0x0,0x0,0x8,0x0,0x890,0x0,0x90,0x90,0x0,0x210,0xa90,0x0,0xa90,0x7,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x890,0x890,0x0,0x0,0x90,0x0,0x80,0x80,0x0,};
 	}
 
   /** Constructor with InputStream. */
@@ -924,7 +979,7 @@ public class ExMachina implements ExMachinaConstants {
   /** Generate ParseException. */
   static public ParseException generateParseException() {
 	 jj_expentries.clear();
-	 boolean[] la1tokens = new boolean[44];
+	 boolean[] la1tokens = new boolean[45];
 	 if (jj_kind >= 0) {
 	   la1tokens[jj_kind] = true;
 	   jj_kind = -1;
@@ -941,7 +996,7 @@ public class ExMachina implements ExMachinaConstants {
 		 }
 	   }
 	 }
-	 for (int i = 0; i < 44; i++) {
+	 for (int i = 0; i < 45; i++) {
 	   if (la1tokens[i]) {
 		 jj_expentry = new int[1];
 		 jj_expentry[0] = i;

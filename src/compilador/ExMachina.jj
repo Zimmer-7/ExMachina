@@ -16,6 +16,31 @@ import java.io.Reader;
 
 public class ExMachina
 {
+  // CONTADOR DE ERROS (Opcional, mas ajuda a saber se o código rodou limpo)
+  private static int errosSintaticos = 0;
+
+  // NOSSO AUXILIAR DE PÂNICO: Consome tokens até achar um dos tokens "seguros" passados por parâmetro
+  public static void pulaAte(int... tokensSeguros)
+  {
+    Token t;
+    while (true)
+    {
+      t = getToken(1); // Olha o próximo token sem tirar da fila
+      
+      // Se for o fim do arquivo, para o pânico imediatamente
+      if (t.kind == EOF) return; 
+      
+      // Se o token atual for um dos tokens seguros que queremos, interrompe o pânico
+      for (int tokenSeguro : tokensSeguros)
+      {
+        if (t.kind == tokenSeguro) return;
+      }
+      
+      // Se não for seguro, joga fora e avança
+      getNextToken();
+    }
+  }
+  
   public static void main(String args [])
   {
     
@@ -42,7 +67,6 @@ public class ExMachina
         System.exit(3);
     }
   }
-
   
 }
 
@@ -106,13 +130,57 @@ TOKEN :
 | < CADEIA : "\"" (<CARACTERE> | <DIGITO> | " ")* "\"" >
 }
 
-void inicio() :
-{ }
+int inicio() :
+{}
 {
-  	(declaracao())*	 < MAIN > bloco()
-	(declaracao())*
+  (
+    try {
+      declaracao()
+    } catch (ParseException e) {
+      errosSintaticos++;
+      System.out.println("Erro na declaracao global: " + e.getMessage());
+      pulaAte(TIPOINT, TIPOFLOAT, TIPOSTRING, MAIN); // Ponto de sincronização global
+    }
+  )*
+  
+  < MAIN > bloco()
+  
+  (
+    try {
+      declaracao()
+    } catch (ParseException e) {
+      errosSintaticos++;
+      System.out.println("Erro na declaracao global pos-Main: " + e.getMessage());
+      pulaAte(TIPOINT, TIPOFLOAT, TIPOSTRING, EOF);
+    }
+  )*
+  "."
+  { return 0; }
+| 
+  < EOF > { return 1; }
+}
 
-| < EOF > 
+
+void bloco() :
+{}
+{
+  < ABREBLOCO > 
+  (
+    try {
+      ( declaracao() | condicional() | enquanto() | para() | controladores() | chamada() | incremento() )
+    } catch (ParseException e) {
+      errosSintaticos++;
+      System.out.println("Erro sintatico dentro do bloco: " + e.getMessage());
+      
+      // Pânico: pula a linha inteira até achar um ';' (fim) ou o fim do bloco '}'
+      pulaAte(FIM, FECHABLOCO); 
+      
+      // Se parou no FIM (~), consome ele para a próxima linha começar limpa
+      if (getToken(1).kind == FIM) {
+        getNextToken();
+      }
+    }
+  )* < FECHABLOCO >
 }
 
 void declaracao() :
@@ -149,12 +217,6 @@ void chamadaVariavel() :
 { }
 {
   (atribuicao())? < FIM >
-}
-
-void bloco() :
-{ }
-{
-	< ABREBLOCO > (declaracao() | condicional() | enquanto() | para() | controladores() | chamada() | incremento())* < FECHABLOCO >
 }
 
 void vetorTamanho() :
