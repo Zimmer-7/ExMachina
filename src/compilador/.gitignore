@@ -1,7 +1,44 @@
-/ExMachina.java
-/ExMachinaConstants.java
-/ExMachinaTokenManager.java
+# --- Arquivos gerados pelo JavaCC e JJTree ---
+# Código Java gerado (você não deve commitar estes arquivos)
+*.java
+!ParseException.java
+!TokenMgrError.java
+!Token.java
+!SimpleCharStream.java
+
+# Diretórios de classes e pacotes compilados
+/bin/
+/build/
+/dist/
+
+# --- Arquivos gerados por IDEs ---
+# IntelliJ IDEA
+.idea/
+*.iml
+*.iws
+
+# Eclipse
+.classpath
+.project
+.settings/
+
+# Netbeans
+nbproject/private/
+build/
+nbbuild/
+dist/
+nbdist/
+.nb-gradle/
+
+# --- Arquivos do Sistema Operacional ---
+# macOS
+.DS_Store
+._*
+.Spotlight-V100
+.Trashes
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
 /ParseException.java
-/SimpleCharStream.java
-/Token.java
-/TokenMgrError.java

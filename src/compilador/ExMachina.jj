@@ -4,7 +4,7 @@
 
 options
 {
-  static = true;
+  static = false;
 }
 
 PARSER_BEGIN(ExMachina)
@@ -13,14 +13,29 @@ package compilador;
 import java.io.IOException;
 import java.io.FileNotFoundException;
 import java.io.Reader;
+import javax.swing.tree.DefaultMutableTreeNode;
 
 public class ExMachina
 {
   // CONTADOR DE ERROS (Opcional, mas ajuda a saber se o código rodou limpo)
-  private static int errosSintaticos = 0;
+  private int errosSintaticos = 0;
+
+  // Campo para receber o resultado da compilação (usado pela interface gráfica)
+  private ResultadoCompilacao resultado;
+
+  // Construtor extra usado pela interface gráfica
+  public ExMachina(Reader r, ResultadoCompilacao res) {
+    this(r);
+    this.resultado = res;
+  }
+
+  // Registra o token reconhecido na lista (usado pela interface gráfica)
+  private void reg(Token t, String tipo) {
+    if (resultado != null) resultado.addToken(t.image, tipo);
+  }
 
   // NOSSO AUXILIAR DE PÂNICO: Consome tokens até achar um dos tokens "seguros" passados por parâmetro
-  public static void pulaAte(int... tokensSeguros)
+  public void pulaAte(int... tokensSeguros)
   {
     Token t;
     while (true)
@@ -43,7 +58,6 @@ public class ExMachina
 
   public static void main(String args [])
   {
-
     if (args.length < 1) {
         System.err.println("Uso: java compilador.ExMachina <arquivo>");
         System.exit(1);
@@ -117,7 +131,6 @@ TOKEN :
 | < CONTINUE: "proximus">
 | < RETURN: "reditus">
 | < INCREMENTO : "Auctus" >
-
 }
 
 TOKEN :
@@ -130,209 +143,320 @@ TOKEN :
 | < CADEIA : "\"" (<CARACTERE> | <DIGITO> | " ")* "\"" >
 }
 
-int inicio() :
-{}
+DefaultMutableTreeNode inicio() :
+{ DefaultMutableTreeNode no = new DefaultMutableTreeNode("inicio");
+  DefaultMutableTreeNode filho; }
 {
   (
     try {
-      declaracao()
+      filho=declaracao() { no.add(filho); }
     } catch (ParseException e) {
       errosSintaticos++;
-      System.out.println("Erro na declaracao global: " + e.getMessage());
-      pulaAte(TIPOINT, TIPOFLOAT, TIPOSTRING, MAIN); // Ponto de sincronização global
+      String msg = MensagensErro.deSintaxe(e);
+      System.out.println(msg);
+      if (resultado != null) resultado.erros.add(msg);
+      pulaAte(TIPOINT, TIPOFLOAT, TIPOSTRING, MAIN);
     }
   )*
 
-  < MAIN > bloco()
+  < MAIN > filho=bloco() { no.add(new DefaultMutableTreeNode("MagnumOpus")); no.add(filho); }
 
   (
     try {
-      declaracao()
+      filho=declaracao() { no.add(filho); }
     } catch (ParseException e) {
       errosSintaticos++;
-      System.out.println("Erro na declaracao global pos-Main: " + e.getMessage());
+      String msg = MensagensErro.deSintaxe(e);
+      System.out.println(msg);
+      if (resultado != null) resultado.erros.add(msg);
       pulaAte(TIPOINT, TIPOFLOAT, TIPOSTRING, EOF);
     }
   )*
-  "."
-  { return 0; }
+  { if (resultado != null) resultado.raizArvore = no; return no; }
 |
-  < EOF > { return 1; }
+  < EOF > { if (resultado != null) resultado.raizArvore = no; return no; }
 }
 
-
-void bloco() :
-{}
+DefaultMutableTreeNode bloco() :
+{ DefaultMutableTreeNode no = new DefaultMutableTreeNode("bloco");
+  DefaultMutableTreeNode filho; }
 {
   < ABREBLOCO >
   (
     try {
-      ( declaracao() | condicional() | enquanto() | para() | controladores() | chamada() | incremento() )
+      ( filho=declaracao()    { no.add(filho); }
+      | filho=condicional()   { no.add(filho); }
+      | filho=enquanto()      { no.add(filho); }
+      | filho=para()          { no.add(filho); }
+      | filho=controladores() { no.add(filho); }
+      | filho=chamada()       { no.add(filho); }
+      | filho=incremento()    { no.add(filho); }
+      )
     } catch (ParseException e) {
       errosSintaticos++;
-      System.out.println("Erro sintatico dentro do bloco: " + e.getMessage());
-
-      // Pânico: pula a linha inteira até achar um ';' (fim) ou o fim do bloco '}'
+      String msg = MensagensErro.deSintaxe(e);
+      System.out.println(msg);
+      if (resultado != null) resultado.erros.add(msg);
       pulaAte(FIM, FECHABLOCO);
-
-      // Se parou no FIM (~), consome ele para a próxima linha começar limpa
       if (getToken(1).kind == FIM) {
         getNextToken();
       }
     }
   )* < FECHABLOCO >
+  { return no; }
 }
 
-void declaracao() :
-{ }
+DefaultMutableTreeNode declaracao() :
+{ DefaultMutableTreeNode no = new DefaultMutableTreeNode("declaracao");
+  DefaultMutableTreeNode filho; Token t; }
 {
-	tipo() < ID > ( declaraFuncao() | declaraVariavel())
+  filho=tipo() { no.add(filho); }
+  t=< ID > { reg(t, "ID"); no.add(new DefaultMutableTreeNode("id: " + t.image)); }
+  ( filho=declaraFuncao() | filho=declaraVariavel() ) { no.add(filho); }
+  { return no; }
 }
 
-void declaraFuncao() :
-{ }
+DefaultMutableTreeNode declaraFuncao() :
+{ DefaultMutableTreeNode no = new DefaultMutableTreeNode("declaraFuncao");
+  DefaultMutableTreeNode filho; Token t; }
 {
-  (< ABREPARENT >tipo() < ID >(< SEPARADOR > tipo() < ID >)*< FECHAPARENT >) bloco()
+  < ABREPARENT >
+  filho=tipo() { no.add(filho); }
+  t=< ID > { no.add(new DefaultMutableTreeNode("id: " + t.image)); }
+  ( < SEPARADOR > filho=tipo() { no.add(filho); } t=< ID > { no.add(new DefaultMutableTreeNode("id: " + t.image)); } )*
+  < FECHAPARENT >
+  filho=bloco() { no.add(filho); }
+  { return no; }
 }
 
-void declaraVariavel() :
-{ }
+DefaultMutableTreeNode declaraVariavel() :
+{ DefaultMutableTreeNode no = new DefaultMutableTreeNode("declaraVariavel");
+  DefaultMutableTreeNode filho; Token t; }
 {
-  (vetorTamanho())?(< SEPARADOR > < ID > )* (atribuicao())? < FIM >
+  (filho=vetorTamanho() { no.add(filho); })?
+  (< SEPARADOR > t=< ID > { no.add(new DefaultMutableTreeNode("id: " + t.image)); })*
+  (filho=atribuicao() { no.add(filho); })?
+  < FIM >
+  { return no; }
 }
 
-void chamada() :
-{ }
+DefaultMutableTreeNode chamada() :
+{ DefaultMutableTreeNode no = new DefaultMutableTreeNode("chamada");
+  DefaultMutableTreeNode filho; Token t; }
 {
-  <ID> (chamadaFuncao() | chamadaVariavel() | incremento())
+  t=< ID > { reg(t, "ID"); no.add(new DefaultMutableTreeNode("id: " + t.image)); }
+  ( filho=chamadaFuncao() | filho=chamadaVariavel() | filho=incremento() ) { no.add(filho); }
+  { return no; }
 }
 
-void chamadaFuncao() :
-{ }
+DefaultMutableTreeNode chamadaFuncao() :
+{ DefaultMutableTreeNode no = new DefaultMutableTreeNode("chamadaFuncao");
+  DefaultMutableTreeNode filho; }
 {
-  < ABREPARENT> (expressao() (< SEPARADOR > expressao())*)?< FECHAPARENT > < FIM >
+  < ABREPARENT >
+  (filho=expressao() { no.add(filho); } (< SEPARADOR > filho=expressao() { no.add(filho); })*)?
+  < FECHAPARENT > < FIM >
+  { return no; }
 }
 
-void chamadaVariavel() :
-{ }
+DefaultMutableTreeNode chamadaVariavel() :
+{ DefaultMutableTreeNode no = new DefaultMutableTreeNode("chamadaVariavel");
+  DefaultMutableTreeNode filho; }
 {
-  (atribuicao())? < FIM >
+  (filho=atribuicao() { no.add(filho); })? < FIM >
+  { return no; }
 }
 
-void vetorTamanho() :
-{}
+DefaultMutableTreeNode vetorTamanho() :
+{ DefaultMutableTreeNode no = new DefaultMutableTreeNode("vetorTamanho");
+  DefaultMutableTreeNode filho; Token t; }
 {
-  < ABREVETOR > (< CONSTANTE > semiExpressao() | < ID > semiExpressao())? < FECHAVETOR >
+  < ABREVETOR >
+  ( t=< CONSTANTE > { no.add(new DefaultMutableTreeNode(t.image)); } filho=semiExpressao() { no.add(filho); }
+  | t=< ID >        { no.add(new DefaultMutableTreeNode(t.image)); } filho=semiExpressao() { no.add(filho); }
+  )?
+  < FECHAVETOR >
+  { return no; }
 }
 
-void vetorCheio() :
-{}
+DefaultMutableTreeNode vetorCheio() :
+{ DefaultMutableTreeNode no = new DefaultMutableTreeNode("vetorCheio");
+  DefaultMutableTreeNode filho; }
 {
-  < ABREVETOR > valor() (< SEPARADOR > valor())* < FECHAVETOR >
+  < ABREVETOR >
+  filho=valor() { no.add(filho); }
+  (< SEPARADOR > filho=valor() { no.add(filho); })*
+  < FECHAVETOR >
+  { return no; }
 }
 
-void valor() :
-{}
+DefaultMutableTreeNode valor() :
+{ DefaultMutableTreeNode no = new DefaultMutableTreeNode("valor"); Token t; }
 {
-  < CONSTANTE > | < CADEIA >
+  ( t=< CONSTANTE > { reg(t, "CONSTANTE"); } | t=< CADEIA > { reg(t, "CADEIA"); } )
+  { no.add(new DefaultMutableTreeNode(t.image)); return no; }
 }
 
-void atribuicao() :
-{}
+DefaultMutableTreeNode atribuicao() :
+{ DefaultMutableTreeNode no = new DefaultMutableTreeNode("atribuicao");
+  DefaultMutableTreeNode filho; }
 {
-	< ATRIBUICAO > (valores() |  vetorCheio()) (< SEPARADOR > valores())*
+  < ATRIBUICAO >
+  (filho=valores() | filho=vetorCheio()) { no.add(filho); }
+  (< SEPARADOR > filho=valores() { no.add(filho); })*
+  { return no; }
 }
 
-void valores() :
-{}
+DefaultMutableTreeNode valores() :
+{ DefaultMutableTreeNode no = new DefaultMutableTreeNode("valores");
+  DefaultMutableTreeNode filho; Token t; }
 {
-  < CADEIA >
-| chamadaFuncao() semiExpressao()
-| expressao()
+  ( t=< CADEIA > { no.add(new DefaultMutableTreeNode(t.image)); }
+  | filho=chamadaFuncao() { no.add(filho); } filho=semiExpressao() { no.add(filho); }
+  | filho=expressao() { no.add(filho); }
+  )
+  { return no; }
 }
 
-void controladores() :
-{}
+DefaultMutableTreeNode controladores() :
+{ DefaultMutableTreeNode no = new DefaultMutableTreeNode("controladores");
+  DefaultMutableTreeNode filho; Token t; }
 {
-  ( <BREAK > | < CONTINUE> | <RETURN > expressao()) < FIM>
+  ( t=< BREAK >    { reg(t, "BREAK");    no.add(new DefaultMutableTreeNode(t.image)); }
+  | t=< CONTINUE > { reg(t, "CONTINUE"); no.add(new DefaultMutableTreeNode(t.image)); }
+  | t=< RETURN >   { reg(t, "RETURN");   no.add(new DefaultMutableTreeNode(t.image)); } filho=expressao() { no.add(filho); }
+  ) < FIM >
+  { return no; }
 }
 
-void tipo() :
-{}
+DefaultMutableTreeNode tipo() :
+{ DefaultMutableTreeNode no = new DefaultMutableTreeNode("tipo"); Token t; }
 {
-	< TIPOINT > | < TIPOFLOAT> | < TIPOSTRING>
+  ( t=< TIPOINT > { reg(t, "TIPOINT"); } | t=< TIPOFLOAT > { reg(t, "TIPOFLOAT"); } | t=< TIPOSTRING > { reg(t, "TIPOSTRING"); } )
+  { no.add(new DefaultMutableTreeNode(t.image)); return no; }
 }
 
-void expressao() :
-{}
+DefaultMutableTreeNode expressao() :
+{ DefaultMutableTreeNode no = new DefaultMutableTreeNode("expressao");
+  DefaultMutableTreeNode filho; Token t; }
 {
-	termo()((< MAIS > | < MENOS >) termo() )*
+  filho=termo() { no.add(filho); }
+  ( ( t=< MAIS > | t=< MENOS > )
+    { no.add(new DefaultMutableTreeNode(t.image)); }
+    filho=termo() { no.add(filho); }
+  )*
+  { return no; }
 }
 
-void semiExpressao() :
-{}
+DefaultMutableTreeNode semiExpressao() :
+{ DefaultMutableTreeNode no = new DefaultMutableTreeNode("semiExpressao");
+  DefaultMutableTreeNode filho; Token t; }
 {
-	((< MAIS > | < MENOS >) termo())*
+  ( ( t=< MAIS > | t=< MENOS > )
+    { no.add(new DefaultMutableTreeNode(t.image)); }
+    filho=termo() { no.add(filho); }
+  )*
+  { return no; }
 }
 
-void termo() :
-{}
+DefaultMutableTreeNode termo() :
+{ DefaultMutableTreeNode no = new DefaultMutableTreeNode("termo");
+  DefaultMutableTreeNode filho; Token t; }
 {
-	unario()((< MULTIPLICA > | < DIVIDE >)unario())*
+  filho=unario() { no.add(filho); }
+  ( ( t=< MULTIPLICA > | t=< DIVIDE > )
+    { no.add(new DefaultMutableTreeNode(t.image)); }
+    filho=unario() { no.add(filho); }
+  )*
+  { return no; }
 }
 
-void unario() :
-{}
+DefaultMutableTreeNode unario() :
+{ DefaultMutableTreeNode no = new DefaultMutableTreeNode("unario");
+  DefaultMutableTreeNode filho; }
 {
-	< MENOS > elemento() | elemento()
+  ( < MENOS > { no.add(new DefaultMutableTreeNode("-")); } filho=elemento() { no.add(filho); }
+  | filho=elemento() { no.add(filho); }
+  )
+  { return no; }
 }
 
-void elemento() :
-{}
+DefaultMutableTreeNode elemento() :
+{ DefaultMutableTreeNode no = new DefaultMutableTreeNode("elemento");
+  DefaultMutableTreeNode filho; Token t; }
 {
-	< CONSTANTE >
-| 	< ID >
-|   "(" expressao() ")"
+  ( t=< CONSTANTE > { reg(t, "CONSTANTE"); no.add(new DefaultMutableTreeNode(t.image)); }
+  | t=< ID >        { reg(t, "ID");        no.add(new DefaultMutableTreeNode(t.image)); }
+  | "(" filho=expressao() { no.add(filho); } ")"
+  )
+  { return no; }
 }
 
-void operadores() :
-{}
+DefaultMutableTreeNode operadores() :
+{ DefaultMutableTreeNode no = new DefaultMutableTreeNode("operador"); Token t; }
 {
-	<IGUAL > | < MAIOR > | < MENOR > | < MAIORIGUAL > | < MENORIGUAL > | < DIFERENTE >
+  ( t=< IGUAL >      { reg(t, "IGUAL");      }
+  | t=< MAIOR >      { reg(t, "MAIOR");      }
+  | t=< MENOR >      { reg(t, "MENOR");      }
+  | t=< MAIORIGUAL > { reg(t, "MAIORIGUAL"); }
+  | t=< MENORIGUAL > { reg(t, "MENORIGUAL"); }
+  | t=< DIFERENTE >  { reg(t, "DIFERENTE");  }
+  )
+  { no.add(new DefaultMutableTreeNode(t.image)); return no; }
 }
 
-void condicional() :
-{}
+DefaultMutableTreeNode condicional() :
+{ DefaultMutableTreeNode no = new DefaultMutableTreeNode("condicional");
+  DefaultMutableTreeNode filho; }
 {
-	< IF > <ABREPARENT > condicao() < FECHAPARENT > bloco() ( < ELSE > bloco())?
+  < IF > < ABREPARENT > filho=condicao() { no.add(filho); } < FECHAPARENT >
+  filho=bloco() { no.add(filho); }
+  ( < ELSE > filho=bloco() { no.add(new DefaultMutableTreeNode("else")); no.add(filho); } )?
+  { return no; }
 }
 
-void condicao() :
-{}
+DefaultMutableTreeNode condicao() :
+{ DefaultMutableTreeNode no = new DefaultMutableTreeNode("condicao");
+  DefaultMutableTreeNode filho; Token t; }
 {
-	< ID >  operadores() (< ID > | < CONSTANTE >)
-
+  t=< ID > { reg(t, "ID"); no.add(new DefaultMutableTreeNode(t.image)); }
+  filho=operadores() { no.add(filho); }
+  ( t=< ID > { reg(t, "ID"); } | t=< CONSTANTE > { reg(t, "CONSTANTE"); } ) { no.add(new DefaultMutableTreeNode(t.image)); }
+  { return no; }
 }
 
-void para() :
-{}
+DefaultMutableTreeNode para() :
+{ DefaultMutableTreeNode no = new DefaultMutableTreeNode("para");
+  DefaultMutableTreeNode filho; Token t; }
 {
-	< LOOPFOR > <ABREPARENT > (declaracao())? condicao() < FIM > ( < ID > incremento() | declaraVariavel())? < FECHAPARENT > bloco()
+  < LOOPFOR > < ABREPARENT >
+  (filho=declaracao() { no.add(filho); })?
+  filho=condicao() { no.add(filho); } < FIM >
+  ( t=< ID > { no.add(new DefaultMutableTreeNode(t.image)); } filho=incremento() { no.add(filho); }
+  | filho=declaraVariavel() { no.add(filho); }
+  )?
+  < FECHAPARENT >
+  filho=bloco() { no.add(filho); }
+  { return no; }
 }
 
-void enquanto() :
-{}
+DefaultMutableTreeNode enquanto() :
+{ DefaultMutableTreeNode no = new DefaultMutableTreeNode("enquanto");
+  DefaultMutableTreeNode filho; }
 {
-	< LOOPWHILE > <ABREPARENT > condicao() < FECHAPARENT > bloco()
+  < LOOPWHILE > < ABREPARENT >
+  filho=condicao() { no.add(filho); }
+  < FECHAPARENT >
+  filho=bloco() { no.add(filho); }
+  { return no; }
 }
 
-void incremento():
-{}
+DefaultMutableTreeNode incremento() :
+{ DefaultMutableTreeNode no = new DefaultMutableTreeNode("incremento");
+  Token t; }
 {
-    <INCREMENTO > ( < SEPARADOR > <ID > <INCREMENTO >)* < FIM >
+  < INCREMENTO >
+  ( < SEPARADOR > t=< ID > { no.add(new DefaultMutableTreeNode(t.image)); } < INCREMENTO > )*
+  < FIM >
+  { return no; }
 }
-
-
-
-
-
