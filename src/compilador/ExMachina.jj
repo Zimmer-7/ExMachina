@@ -183,6 +183,10 @@ DefaultMutableTreeNode bloco() :
 {
   < ABREBLOCO >
   (
+    // 1. O LOOKAHEAD FORÇA o parser a entrar no loop para qualquer token,
+    // garantindo que os erros caiam DENTRO do try-catch.
+    LOOKAHEAD({ getToken(1).kind != FECHABLOCO && getToken(1).kind != EOF })
+    
     try {
       ( filho=declaracao()    { no.add(filho); }
       | filho=condicional()   { no.add(filho); }
@@ -197,6 +201,10 @@ DefaultMutableTreeNode bloco() :
       String msg = MensagensErro.deSintaxe(e);
       System.out.println(msg);
       if (resultado != null) resultado.erros.add(msg);
+      
+      // 2. ADICIONA UM NÓ DE ERRO NA AST (Opcional, mas muito útil)
+      no.add(new DefaultMutableTreeNode("Erro: " + e.currentToken.next.image));
+      
       pulaAte(FIM, FECHABLOCO);
       if (getToken(1).kind == FIM) {
         getNextToken();
