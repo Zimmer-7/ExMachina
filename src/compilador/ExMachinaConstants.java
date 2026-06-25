@@ -132,6 +132,8 @@ public interface ExMachinaConstants {
     "<ID>",
     "<CARACTERE>",
     "<CADEIA>",
+    "\"(\"",
+    "\")\"",
   };
 
 }

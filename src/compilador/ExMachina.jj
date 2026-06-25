@@ -185,9 +185,8 @@ void valores() :
 {}
 {
   < CADEIA >
-| < CONSTANTE > semiExpressao()
 | chamadaFuncao() semiExpressao()
-| < ID > semiExpressao()
+| expressao()
 }
 
 void controladores() :
@@ -231,7 +230,7 @@ void elemento() :
 {
 	< CONSTANTE >
 | 	< ID >
-|   < ABREPARENT > expressao() < FECHAPARENT >
+|   "(" expressao() ")"
 }
 
 void operadores() :
