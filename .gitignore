@@ -1,10 +1,11 @@
-# --- Arquivos gerados pelo JavaCC e JJTree ---
-# Código Java gerado (você não deve commitar estes arquivos)
-*.java
-!ParseException.java
-!TokenMgrError.java
-!Token.java
-!SimpleCharStream.java
+# --- Arquivos gerados pelo JavaCC a cada build (não commitar) ---
+src/compilador/ExMachina.java
+src/compilador/ExMachinaConstants.java
+src/compilador/ExMachinaTokenManager.java
+
+# Os arquivos "iniciais" do JavaCC (Token.java, ParseException.java,
+# TokenMgrError.java, SimpleCharStream.java) são gerados uma única vez
+# e ficam versionados — NÃO entram aqui.
 
 # Diretórios de classes e pacotes compilados
 /bin/
@@ -24,9 +25,7 @@
 
 # Netbeans
 nbproject/private/
-build/
 nbbuild/
-dist/
 nbdist/
 .nb-gradle/
 

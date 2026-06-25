@@ -26,29 +26,29 @@ public class ExMachina
     while (true)
     {
       t = getToken(1); // Olha o próximo token sem tirar da fila
-      
+
       // Se for o fim do arquivo, para o pânico imediatamente
-      if (t.kind == EOF) return; 
-      
+      if (t.kind == EOF) return;
+
       // Se o token atual for um dos tokens seguros que queremos, interrompe o pânico
       for (int tokenSeguro : tokensSeguros)
       {
         if (t.kind == tokenSeguro) return;
       }
-      
+
       // Se não for seguro, joga fora e avança
       getNextToken();
     }
   }
-  
+
   public static void main(String args [])
   {
-    
+
     if (args.length < 1) {
         System.err.println("Uso: java compilador.ExMachina <arquivo>");
         System.exit(1);
     }
-	
+
     try (Reader r = LerArquivo.abrir(args[0])) {
         ExMachina parser = new ExMachina(r);
         parser.inicio();
@@ -60,14 +60,14 @@ public class ExMachina
         System.err.println("Erro de I/O: " + e.getMessage());
         System.exit(2);
     } catch (ParseException e) {
-        System.err.println("Erro de sintaxe: " + e.getMessage());
+        System.err.println(MensagensErro.deSintaxe(e));
         System.exit(3);
     } catch (TokenMgrError e) {
-        System.err.println("Erro léxico: " + e.getMessage());
+        System.err.println(MensagensErro.deLexico(e));
         System.exit(3);
     }
   }
-  
+
 }
 
 PARSER_END(ExMachina)
@@ -142,9 +142,9 @@ int inicio() :
       pulaAte(TIPOINT, TIPOFLOAT, TIPOSTRING, MAIN); // Ponto de sincronização global
     }
   )*
-  
+
   < MAIN > bloco()
-  
+
   (
     try {
       declaracao()
@@ -156,7 +156,7 @@ int inicio() :
   )*
   "."
   { return 0; }
-| 
+|
   < EOF > { return 1; }
 }
 
@@ -164,17 +164,17 @@ int inicio() :
 void bloco() :
 {}
 {
-  < ABREBLOCO > 
+  < ABREBLOCO >
   (
     try {
       ( declaracao() | condicional() | enquanto() | para() | controladores() | chamada() | incremento() )
     } catch (ParseException e) {
       errosSintaticos++;
       System.out.println("Erro sintatico dentro do bloco: " + e.getMessage());
-      
+
       // Pânico: pula a linha inteira até achar um ';' (fim) ou o fim do bloco '}'
-      pulaAte(FIM, FECHABLOCO); 
-      
+      pulaAte(FIM, FECHABLOCO);
+
       // Se parou no FIM (~), consome ele para a próxima linha começar limpa
       if (getToken(1).kind == FIM) {
         getNextToken();
@@ -260,7 +260,7 @@ void controladores() :
 void tipo() :
 {}
 {
-	< TIPOINT > | < TIPOFLOAT> | < TIPOSTRING> 
+	< TIPOINT > | < TIPOFLOAT> | < TIPOSTRING>
 }
 
 void expressao() :
@@ -329,10 +329,10 @@ void enquanto() :
 void incremento():
 {}
 {
-    <INCREMENTO > ( < SEPARADOR > <ID > <INCREMENTO >)* < FIM > 
+    <INCREMENTO > ( < SEPARADOR > <ID > <INCREMENTO >)* < FIM >
 }
 
 
 
-  
-  
+
+
