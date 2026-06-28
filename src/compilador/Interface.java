@@ -167,12 +167,13 @@ public class Interface extends JFrame {
             ExMachina analisador = new ExMachina(leitorArquivo, resultado);
             analisador.inicio();
 
-            // Sempre mostra "Linguagem Aceita ExMachina." em verde
-            escreverMensagem("Linguagem Aceita ExMachina.", new Color(0, 128, 0));
-
-            // Se houver erros recuperados, mostra em vermelho e realça as linhas
-            if (!resultado.erros.isEmpty()) {
-                escreverMensagem("\n\nERROS RECUPERADOS:\n", Color.RED);
+            if (resultado.erros.isEmpty()) {
+                // Sem erros: aceito limpo
+                escreverMensagem("Linguagem Aceita ExMachina.", new Color(0, 128, 0));
+            } else {
+                // Com erros recuperados: rejeita e mostra os erros
+                escreverMensagem("REJEITADO\n", Color.RED);
+                escreverMensagem("\nERROS RECUPERADOS:\n", Color.RED);
                 for (String erro : resultado.erros) {
                     escreverMensagem(erro + "\n", Color.RED);
                 }
